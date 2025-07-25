@@ -1,0 +1,22 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Login Alert{% endblock %}
+
+{% block content %}
+    <h2>Login Alert</h2>
+    
+    <p>Hi {{ user.full_name }},</p>
+    
+    <p>We detected a login to your account:</p>
+    
+    <div class="alert">
+        <p><strong>Time:</strong> {{ session.created_at|date:"F j, Y, g:i A" }}</p>
+        <p><strong>Location:</strong> {{ session.location|default:"Unknown" }}</p>
+        <p><strong>Device:</strong> {{ session.user_agent|truncatechars:50 }}</p>
+        <p><strong>IP Address:</strong> {{ session.ip_address }}</p>
+    </div>
+    
+    <p>If this was you, no action is needed.</p>
+    
+    <p>If you don't recognize this login, please secure your account immediately by changing your password.</p>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'emails/base.html' %}
+
+{% block title %}2FA Emergency Disable Request Rejected - NCLEX Virtual School{% endblock %}
+
+{% block header %}Security Update{% endblock %}
+
+{% block content %}
+<div class="alert">
+    <strong>❌ Rejected:</strong> Emergency 2FA disable request was not approved
+</div>
+
+<h2>Hello {{ user.first_name|default:user.email }},</h2>
+
+<p>After reviewing your request to emergency disable two-factor authentication (2FA), our security team has determined that the request cannot be approved at this time.</p>
+
+<h3>Request Details:</h3>
+<ul>
+    <li><strong>Account:</strong> {{ user.email }}</li>
+    <li><strong>Reviewed at:</strong> {{ rejected_at|date:"F j, Y g:i A" }}</li>
+    <li><strong>Status:</strong> Not approved</li>
+</ul>
+
+<h3>Why was my request rejected?</h3>
+<p>Emergency 2FA disable requests may be rejected for various security reasons, including:</p>
+<ul>
+    <li>Insufficient identity verification</li>
+    <li>Recent suspicious account activity</li>
+    <li>Security policy requirements</li>
+    <li>Incomplete request information</li>
+</ul>
+
+<div class="alert">
+    <h4>🔍 Alternative Solutions:</h4>
+    <p>Before submitting another request, please try these options:</p>
+    <ul>
+        <li><strong>Backup codes:</strong> Use any saved backup codes from your 2FA setup</li>
+        <li><strong>Authenticator app:</strong> Check all your devices for the authenticator app</li>
+        <li><strong>Trusted device:</strong> Log in from a device where you're already authenticated</li>
+        <li><strong>Account recovery:</strong> Use other account recovery methods</li>
+    </ul>
+</div>
+
+<h3>What can I do next?</h3>
+<ol>
+    <li><strong>Try alternative access methods</strong> listed above</li>
+    <li><strong>Contact support</strong> for personalized assistance</li>
+    <li><strong>Provide additional verification</strong> if requested</li>
+    <li><strong>Submit a new request</strong> with more documentation if needed</li>
+</ol>
+
+<h3>Get Help:</h3>
+<p>Our support team is here to help you regain access to your account securely:</p>
+<ul>
+    <li><strong>Email:</strong> <a href="mailto:{{ support_email }}">{{ support_email }}</a></li>
+    <li><strong>Response time:</strong> Within 24 hours</li>
+    <li><strong>Include in your message:</strong>
+        <ul>
+            <li>Your account email</li>
+            <li>Detailed description of the issue</li>
+            <li>Any error messages you're seeing</li>
+            <li>Steps you've already tried</li>
+        </ul>
+    </li>
+</ul>
+
+<div class="alert">
+    <h4>🔒 Security Information:</h4>
+    <p>We take account security seriously. The emergency disable process includes:</p>
+    <ul>
+        <li>Manual review by security professionals</li>
+        <li>Identity verification requirements</li>
+        <li>Risk assessment procedures</li>
+        <li>Documentation of all actions</li>
+    </ul>
+</div>
+
+<h3>Prevention Tips:</h3>
+<p>To avoid future 2FA issues:</p>
+<ul>
+    <li>Save backup codes in multiple secure locations</li>
+    <li>Use multiple authenticator apps</li>
+    <li>Keep your recovery email updated</li>
+    <li>Document your 2FA setup process</li>
+</ul>
+
+<p>We understand this may be frustrating, but these security measures protect your account and personal information. Please contact our support team for personalized assistance.</p>
+
+<p>Best regards,<br>
+The NCLEX Virtual School Security Team</p>
+{% endblock %}

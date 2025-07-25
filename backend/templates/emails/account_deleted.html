@@ -1,0 +1,32 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Account Deleted{% endblock %}
+
+{% block header %}Account Deleted{% endblock %}
+
+{% block content %}
+    <h2>Account Successfully Deleted</h2>
+    
+    <p>Hi {{ user.full_name }},</p>
+    
+    <p>Your NCLEX Virtual School account has been permanently deleted as requested.</p>
+    
+    <div class="alert">
+        <p><strong>Deleted on:</strong> {{ now|date:"F j, Y, g:i A" }}</p>
+        <p><strong>Account Email:</strong> {{ user.email }}</p>
+    </div>
+    
+    <p><strong>What was deleted:</strong></p>
+    <ul>
+        <li>Your account and profile information</li>
+        <li>All course progress and certificates</li>
+        <li>Practice test results and analytics</li>
+        <li>All personal data and preferences</li>
+    </ul>
+    
+    <p>Thank you for using NCLEX Virtual School. We're sorry to see you go!</p>
+    
+    <p>If you decide to return in the future, you'll need to create a new account.</p>
+    
+    <p>If you have any questions, please contact our support team.</p>
+{% endblock %}

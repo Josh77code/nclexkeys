@@ -1,0 +1,77 @@
+{% extends 'emails/base.html' %}
+
+{% block title %}2FA Emergency Disabled - NCLEX Virtual School{% endblock %}
+
+{% block header %}Security Update{% endblock %}
+
+{% block content %}
+<div class="alert">
+    <strong>✅ Approved:</strong> Two-factor authentication has been emergency disabled
+</div>
+
+<h2>Hello {{ user.first_name|default:user.email }},</h2>
+
+<p>Your request to emergency disable two-factor authentication (2FA) has been approved by our security team. 2FA has been successfully disabled for your account.</p>
+
+<h3>What happened:</h3>
+<ul>
+    <li><strong>Action:</strong> Two-factor authentication disabled</li>
+    <li><strong>Processed at:</strong> {{ disabled_at|date:"F j, Y g:i A" }}</li>
+    <li><strong>Account:</strong> {{ user.email }}</li>
+    <li><strong>Status:</strong> You can now log in with just your email and password</li>
+</ul>
+
+<div class="alert">
+    <h4>🔒 Important Security Steps:</h4>
+    <p>For your account security, we strongly recommend completing these steps immediately:</p>
+    <ol>
+        <li><strong>Log in to your account</strong> - <a href="{{ login_url }}" class="button">Login Now</a></li>
+        <li><strong>Re-enable 2FA</strong> - Go to Security Settings and set up 2FA again</li>
+        <li><strong>Save backup codes</strong> - Store them in a secure location</li>
+        <li><strong>Review account activity</strong> - Check for any suspicious activity</li>
+    </ol>
+</div>
+
+<h3>Setting up 2FA again:</h3>
+<p>To re-enable two-factor authentication:</p>
+<ol>
+    <li>Log in to your account</li>
+    <li>Go to <a href="{{ security_url }}">Security Settings</a></li>
+    <li>Click "Enable Two-Factor Authentication"</li>
+    <li>Scan the QR code with your authenticator app</li>
+    <li>Save the backup codes in a secure location</li>
+</ol>
+
+<h3>Recommended authenticator apps:</h3>
+<ul>
+    <li>Google Authenticator</li>
+    <li>Authy</li>
+    <li>Microsoft Authenticator</li>
+    <li>1Password</li>
+    <li>LastPass Authenticator</li>
+</ul>
+
+<div class="alert">
+    <h4>⚠️ Security Best Practices:</h4>
+    <ul>
+        <li>Use a strong, unique password</li>
+        <li>Enable 2FA as soon as possible</li>
+        <li>Keep backup codes in a secure location</li>
+        <li>Never share your login credentials</li>
+        <li>Log out from public computers</li>
+        <li>Monitor your account for unusual activity</li>
+    </ul>
+</div>
+
+<h3>Need help?</h3>
+<p>If you need assistance setting up 2FA or have security concerns, please contact our support team:</p>
+<ul>
+    <li>Email: <a href="mailto:support@nclexvirtualschool.com">support@nclexvirtualschool.com</a></li>
+    <li>Response time: Within 24 hours</li>
+</ul>
+
+<p>Thank you for your patience during this security process. Your account security is our top priority.</p>
+
+<p>Best regards,<br>
+The NCLEX Virtual School Security Team</p>
+{% endblock %}

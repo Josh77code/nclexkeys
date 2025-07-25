@@ -1,0 +1,32 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Account Deletion Requested{% endblock %}
+
+{% block header %}Account Deletion Request{% endblock %}
+
+{% block content %}
+    <h2>Account Deletion Requested</h2>
+    
+    <p>Hi {{ user.full_name }},</p>
+    
+    <p>You have requested to delete your NCLEX Virtual School account.</p>
+    
+    <div class="alert">
+        <p><strong>Deletion Date:</strong> {{ user.deletion_scheduled_for|date:"F j, Y, g:i A" }}</p>
+        <p><strong>Days Remaining:</strong> {{ days_remaining }}</p>
+    </div>
+    
+    <p><strong>What happens next:</strong></p>
+    <ul>
+        <li>Your account is now in "deletion pending" status</li>
+        <li>You can still log in and cancel this request</li>
+        <li>Your account will be permanently deleted on {{ user.deletion_scheduled_for|date:"F j, Y" }}</li>
+        <li>All your data, progress, and courses will be permanently removed</li>
+    </ul>
+    
+    <p>If you want to cancel this deletion request, simply log in to your account and go to Account Settings.</p>
+    
+    <a href="{{ login_url }}" class="button">Cancel Deletion</a>
+    
+    <p>If you didn't request this deletion, please contact our support team immediately.</p>
+{% endblock %}

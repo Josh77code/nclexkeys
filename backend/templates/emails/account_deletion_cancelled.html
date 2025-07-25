@@ -1,0 +1,24 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Account Deletion Cancelled{% endblock %}
+
+{% block header %}Deletion Cancelled{% endblock %}
+
+{% block content %}
+    <h2>Account Deletion Cancelled</h2>
+    
+    <p>Hi {{ user.full_name }},</p>
+    
+    <p>Great news! Your account deletion request has been successfully cancelled.</p>
+    
+    <div class="alert">
+        <p><strong>Cancelled on:</strong> {{ now|date:"F j, Y, g:i A" }}</p>
+        <p><strong>Account Status:</strong> Active</p>
+    </div>
+    
+    <p>Your account is now fully active and you can continue using NCLEX Virtual School.</p>
+    
+    <p>If you didn't cancel this deletion request, please contact our support team immediately.</p>
+    
+    <a href="{{ dashboard_url }}" class="button">Go to Dashboard</a>
+{% endblock %}

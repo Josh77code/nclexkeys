@@ -1,0 +1,31 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Account Locked{% endblock %}
+
+{% block header %}Account Locked{% endblock %}
+
+{% block content %}
+    <h2>Account Temporarily Locked</h2>
+    
+    <p>Hi {{ user.full_name }},</p>
+    
+    <p>Your account has been temporarily locked due to multiple failed login attempts.</p>
+    
+    <div class="alert alert-danger">
+        <p><strong>Account Email:</strong> {{ user.email }}</p>
+        <p><strong>Locked on:</strong> {{ user.account_locked_at|date:"F j, Y, g:i A" }}</p>
+        <p><strong>Unlock time:</strong> {{ user.account_locked_until|date:"F j, Y, g:i A" }}</p>
+        <p><strong>Failed Attempts:</strong> {{ user.failed_login_attempts }}</p>
+    </div>
+    
+    <p><strong>Security Information:</strong></p>
+    <ul>
+        <li>Account will unlock automatically in 30 minutes</li>
+        <li>If this wasn't you, consider changing your password</li>
+        <li>Contact support if you need immediate assistance</li>
+    </ul>
+    
+    <p>If you believe this is a mistake or if you're having trouble accessing your account, please contact our support team.</p>
+    
+    <p>For security reasons, please ensure you're using the correct password and consider enabling two-factor authentication.</p>
+{% endblock %}

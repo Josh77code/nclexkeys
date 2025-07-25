@@ -1,0 +1,36 @@
+# Python
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.env
+.env
+venv/
+env/
+dist/
+build/
+*.egg-info/
+*.log
+
+# Django
+*.sqlite3
+db.sqlite3
+/media/
+/staticfiles/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+.hintrc
+
+# Mac / Windows
+.DS_Store
+Thumbs.db
+
+# Log
+log/
+
+# geoIP
+geoip/
+

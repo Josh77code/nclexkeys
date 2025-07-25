@@ -1,0 +1,67 @@
+{% extends 'emails/base.html' %}
+
+{% block title %}Emergency 2FA Disable Request - NCLEX Virtual School{% endblock %}
+
+{% block header %}Security Alert{% endblock %}
+
+{% block content %}
+<div class="alert">
+    <strong>⚠️ Security Alert:</strong> Emergency 2FA disable request submitted
+</div>
+
+<h2>Hello {{ user.first_name|default:user.email }},</h2>
+
+<p>We received a request to emergency disable two-factor authentication (2FA) for your account. This is a security-sensitive operation that requires admin approval.</p>
+
+<h3>Request Details:</h3>
+<ul>
+    <li><strong>Email:</strong> {{ user.email }}</li>
+    <li><strong>Request Time:</strong> {{ request_time|date:"F j, Y g:i A" }}</li>
+    <li><strong>IP Address:</strong> {{ ip_address }}</li>
+    <li><strong>Emergency Token:</strong> {{ emergency_token }}</li>
+</ul>
+
+<div class="alert">
+    <h4>⚠️ Important Security Information:</h4>
+    <ul>
+        <li>This request will be reviewed by our security team</li>
+        <li>Admin approval is required before 2FA can be disabled</li>
+        <li>You will receive a confirmation email once the request is processed</li>
+        <li>If you didn't make this request, please contact our support team immediately</li>
+    </ul>
+</div>
+
+<h3>What happens next?</h3>
+<ol>
+    <li>Our security team will review your request</li>
+    <li>Additional verification may be required</li>
+    <li>You'll receive an email with the decision within 24 hours</li>
+    <li>If approved, 2FA will be disabled and you'll need to set it up again</li>
+</ol>
+
+<h3>Alternative Options:</h3>
+<p>If you still have access to any of the following, you can use them instead:</p>
+<ul>
+    <li>Your authenticator app (Google Authenticator, Authy, etc.)</li>
+    <li>Backup codes you saved during 2FA setup</li>
+    <li>Another trusted device where you're already logged in</li>
+</ul>
+
+<div class="alert">
+    <h4>🔒 Security Reminder:</h4>
+    <p>Two-factor authentication is crucial for account security. Once access is restored, we strongly recommend:</p>
+    <ul>
+        <li>Re-enabling 2FA immediately</li>
+        <li>Saving backup codes in a secure location</li>
+        <li>Using a password manager</li>
+        <li>Reviewing your account security settings</li>
+    </ul>
+</div>
+
+<p>If you have any questions or concerns, please contact our support team at <a href="mailto:support@nclexvirtualschool.com">support@nclexvirtualschool.com</a>.</p>
+
+<p>Thank you for your patience as we work to maintain the security of your account.</p>
+
+<p>Best regards,<br>
+The NCLEX Virtual School Security Team</p>
+{% endblock %}

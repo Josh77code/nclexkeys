@@ -1,0 +1,42 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Account Deletion Reminder{% endblock %}
+
+{% block header %}Account Deletion Reminder{% endblock %}
+
+{% block content %}
+    <h2>Your Account Will Be Deleted Soon</h2>
+    
+    <p>Hi {{ user.full_name }},</p>
+    
+    <p>This is a reminder that your NCLEX Virtual School account is scheduled for deletion.</p>
+    
+    <div class="alert alert-danger">
+        <p><strong>Account Email:</strong> {{ user.email }}</p>
+        <p><strong>Deletion Date:</strong> {{ deletion_date|date:"F j, Y, g:i A" }}</p>
+        <p><strong>Time Remaining:</strong> {{ days_remaining }} day{{ days_remaining|pluralize }}</p>
+    </div>
+    
+    {% if days_remaining == 1 %}
+        <p><strong>⚠️ URGENT:</strong> Your account will be permanently deleted tomorrow. This action cannot be undone.</p>
+    {% else %}
+        <p><strong>Important:</strong> Your account will be permanently deleted in {{ days_remaining }} days. This action cannot be undone.</p>
+    {% endif %}
+    
+    <p><strong>What happens when your account is deleted:</strong></p>
+    <ul>
+        <li>All your personal information will be permanently removed</li>
+        <li>Your progress, test scores, and study materials will be deleted</li>
+        <li>You will no longer be able to access your account</li>
+        <li>This action is irreversible</li>
+    </ul>
+    
+    <p><strong>Want to keep your account?</strong></p>
+    <p>If you've changed your mind and want to keep your account, please log in to your account and cancel the deletion request before the scheduled deletion date.</p>
+    
+    <a href="{{ login_url }}" class="button">Cancel Account Deletion</a>
+    
+    <p>If you have any questions or need assistance, please contact our support team at <a href="mailto:{{ support_email }}">{{ support_email }}</a>.</p>
+    
+    <p>Thank you for using NCLEX Virtual School.</p>
+{% endblock %}
