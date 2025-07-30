@@ -5,9 +5,114 @@ from django.utils import timezone
 from django.db import transaction
 from django.conf import settings
 from datetime import timedelta
+from courses.models import Course, CourseAppeal
+from payments.services import PayoutService
+from utils.auth import EmailService
 import logging
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 logger = logging.getLogger(__name__)
+
+@shared_task
+def create_monthly_payouts_task():
+    """Run monthly payout calculation"""
+    try:
+        payouts = PayoutService.create_monthly_payouts()
+        logger.info(f"Created {len(payouts)} monthly payouts")
+        return f"Success: {len(payouts)} payouts created"
+    except Exception as e:
+        logger.error(f"Monthly payout creation failed: {str(e)}")
+        return f"Failed: {str(e)}"
+
+@shared_task  
+def process_auto_payouts():
+    """Auto-process eligible payouts for instructors with verified bank accounts"""
+    from payments.models import InstructorPayout
+    
+    # Only process payouts for instructors with verified bank accounts and auto-payout enabled
+    pending_payouts = InstructorPayout.objects.filter(
+        status='pending',
+        net_payout__gte=1000.00,  # Minimum threshold (1,000 NGN as you mentioned)
+        instructor__bank_account__is_verified=True,
+        instructor__bank_account__auto_payout_enabled=True
+    ).select_related('instructor', 'instructor__bank_account')
+    
+    processed = 0
+    failed = 0
+    
+    for payout in pending_payouts:
+        try:
+            # Additional eligibility check
+            if payout.is_eligible_for_payout():
+                result = PayoutService.process_payout(payout.id, auto_process=True)
+                if result['success']:
+                    processed += 1
+                    logger.info(f"Auto-processed payout: {payout.instructor.email} - {payout.net_payout}")
+                else:
+                    failed += 1
+                    logger.warning(f"Auto-payout failed: {payout.instructor.email} - {result['message']}")
+            else:
+                logger.info(f"Payout not eligible: {payout.instructor.email}")
+                
+        except Exception as e:
+            failed += 1
+            logger.error(f"Auto-payout error for {payout.instructor.email}: {str(e)}")
+    
+    return f"Auto-processed {processed} payouts, {failed} failed"
+
+@shared_task
+def send_bulk_student_notifications(course_ids, notification_type, context_data):
+    """Background task for sending bulk notifications to students"""
+    try:
+        courses = Course.objects.filter(id__in=course_ids)
+        for course in courses:
+            if notification_type == 'course_reactivated':
+                EmailService.send_course_reactivation_to_students(course)
+            elif notification_type == 'course_suspended':
+                EmailService.send_course_suspension_to_students(
+                    course, context_data.get('reason', '')
+                )
+        
+        logger.info(f"Bulk {notification_type} notifications completed for {len(course_ids)} courses")
+        return f"Successfully sent {notification_type} notifications for {len(course_ids)} courses"
+    except Exception as e:
+        logger.error(f"Bulk notification task failed: {str(e)}")
+        raise
+
+@shared_task
+def send_instructor_status_notifications(instructor_id, action, reason, course_ids=None):
+    """Background task for sending instructor status notifications"""
+    try:
+        instructor = User.objects.get(id=instructor_id)
+        
+        # Send instructor notification
+        EmailService.send_instructor_status_notification(instructor, action, reason)
+        
+        # Send student notifications if courses are affected
+        if course_ids:
+            affected_courses = Course.objects.filter(id__in=course_ids)
+            EmailService.send_instructor_status_change_to_students(
+                instructor, action, affected_courses
+            )
+        
+        return f"Notifications sent successfully for instructor {instructor.email}"
+    except Exception as e:
+        logger.error(f"Failed to send instructor notifications: {str(e)}")
+        raise
+
+@shared_task
+def send_course_appeal_notifications(appeal_id):
+    """Background task for sending appeal notifications"""
+    try:
+        appeal = CourseAppeal.objects.get(id=appeal_id)
+        EmailService.send_course_appeal_notification(appeal)
+        EmailService.send_appeal_confirmation_to_instructor(appeal)
+        return f"Appeal notifications sent for appeal {appeal_id}"
+    except Exception as e:
+        logger.error(f"Failed to send appeal notifications: {str(e)}")
+        raise
 
 @shared_task(bind=True, max_retries=3)
 def cleanup_old_records(self):
@@ -88,7 +193,7 @@ def process_scheduled_deletions(self):
                     logger.info(f'Processing scheduled deletion for user: {user.email}')
                     # Send final deletion notification before deleting
                     try:
-                        from ..users.utils import EmailService
+                        from ..utils.auth import EmailService
                         EmailService.send_account_deleted_email(user)
                     except Exception as email_error:
                         logger.warning(f'Failed to send deletion notification to {user.email}: {email_error}')
@@ -216,7 +321,7 @@ def send_deletion_reminders(self):
         )
         
         try:
-            from ..users.utils import EmailService
+            from ..utils.auth import EmailService
             
             for user in users_7_days:
                 EmailService.send_deletion_reminder(user, days_remaining=7)
