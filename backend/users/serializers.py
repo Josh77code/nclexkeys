@@ -1,4 +1,4 @@
-# serializers.py
+# users/serializers.py
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
@@ -11,13 +11,15 @@ import re
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
     confirm_password = serializers.CharField(write_only=True)
+    role = serializers.ChoiceField(choices=['student', 'instructor'], required=True)
     
     class Meta:
         model = User
-        fields = ['email', 'full_name', 'password', 'confirm_password']
+        fields = ['email', 'full_name', 'phone_number', 'role', 'password', 'confirm_password']
         extra_kwargs = {
             'email': {'required': True},
             'full_name': {'required': True},
+            'phone_number': {'required': True},
         }
     
     def validate_email(self, value):
@@ -36,6 +38,31 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Full name must contain at least 2 words separated by a space (e.g., 'John Doe').")
         
         return value
+        
+    def validate_phone_number(self, value):
+        value = value.strip()
+        if len(value) < 10:
+            raise serializers.ValidationError("Phone number must be at least 10 digits long.")
+
+        # Remove spaces, hyphens, parentheses for validation
+        cleaned = re.sub(r'[\s\-\(\)]', '', value)
+        if not re.match(r'^\+?[\d]{10,15}$', cleaned):
+            raise serializers.ValidationError("Enter a valid phone number.")
+
+        return value
+
+    def validate_role(self, value):
+        # Map frontend roles to backend roles (only student and instructor allowed)
+        role_mapping = {
+            'student': 'user',      # Student -> User
+            'instructor': 'admin'   # Instructor -> Admin (Course Creator/Instructor)
+        }
+
+        if value not in role_mapping:
+            raise serializers.ValidationError("Only 'student' and 'instructor' roles are allowed during registration.")
+
+        # Return the mapped backend role
+        return role_mapping[value]
     
     def validate_password(self, value):
         # Custom password validation
@@ -214,10 +241,9 @@ class ResendVerificationSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'email', 'full_name', 'role', 'created_at', 'is_email_verified', 
-                 'is_deletion_pending', 'deletion_scheduled_for']
+        fields = ['id', 'email', 'full_name', 'phone_number', 'role', 'created_at',                 'is_email_verified', 'is_deletion_pending', 'deletion_scheduled_for']
         read_only_fields = ['id', 'email', 'role', 'created_at', 'is_email_verified', 
-                           'is_deletion_pending', 'deletion_scheduled_for']
+        'is_deletion_pending', 'deletion_scheduled_for']
     
     def validate_full_name(self, value):
         value = value.strip()
@@ -235,7 +261,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['full_name']
+        fields = ['full_name', 'phone_number']
     
     def validate_full_name(self, value):
         value = value.strip()
@@ -247,6 +273,17 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
         if len(words) < 2:
             raise serializers.ValidationError("Full name must contain at least 2 words separated by a space (e.g., 'John Doe').")
         
+        return value
+    
+    def validate_phone_number(self, value):
+        value = value.strip()
+        if len(value) < 10:
+            raise serializers.ValidationError("Phone number must be at least 10 digits long.")
+
+        cleaned = re.sub(r'[\s\-\(\)]', '', value)
+        if not re.match(r'^\+?[\d]{10,15}$', cleaned):
+            raise serializers.ValidationError("Enter a valid phone number.")
+
         return value
 
 

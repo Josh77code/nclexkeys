@@ -1,4 +1,4 @@
-# models.py
+# users/models.py
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.contrib.auth.hashers import make_password, check_password
@@ -21,7 +21,7 @@ class CustomUserManager(BaseUserManager):
     def create_superuser(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('role', 'admin')
+        extra_fields.setdefault('role', 'super_admin')
         extra_fields.setdefault('is_email_verified', True)
         
         if extra_fields.get('is_staff') is not True:
@@ -35,13 +35,15 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     ROLE_CHOICES = [
         ('user', 'User'),
-        ('admin', 'Admin'),
+        ('admin', 'Course Creator/Instructor'),
+        ('super_admin', 'Platform Administrator'),
     ]
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True, validators=[EmailValidator()])
     full_name = models.CharField(max_length=255)
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
+    phone_number = models.CharField(max_length=20, blank=True)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='user')
     
     # Authentication fields
     is_active = models.BooleanField(default=True)
@@ -77,6 +79,27 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['full_name']
+
+    # Track moderation to the course
+    moderation_status = models.CharField(
+        max_length=20, 
+        choices=[
+            ('pending', 'Pending Approval'),
+            ('approved', 'Approved'),
+            ('rejected', 'Rejected'),
+            ('suspended', 'Suspended')
+        ], 
+        default='pending'
+    )
+    moderated_by = models.ForeignKey(
+        'self', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True, 
+        related_name='moderated_users'
+    )
+    moderated_at = models.DateTimeField(null=True, blank=True)
+    moderation_reason = models.TextField(blank=True)
     
     class Meta:
         db_table = 'users'
@@ -109,7 +132,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         if self.failed_login_attempts >= 5:  # Lock after 5 failed attempts
             self.lock_account()
             # To avoid circular import
-            from .utils import EmailService
+            from ..utils.auth import EmailService
             EmailService.send_account_locked_email(self)
         self.save(update_fields=['failed_login_attempts'])
     
@@ -262,6 +285,20 @@ class EmailLog(models.Model):
         ('account_deletion_requested', 'Account Deletion Requested'), 
         ('deletion_cancelled', 'Deletion Cancelled'), 
         ('account_deleted', 'Account Deleted'), 
+        ('new_course_pending_review', 'New Course Pending Review'),
+        ('course_approved', 'Course Approved'),
+        ('course_rejected', 'Course Rejected'),
+        ('course_suspended', 'Course Suspended'),
+        ('instructor_suspended', 'Instructor Suspended'),
+        ('instructor_payout', 'Instructor Payout'),
+        ('high_revenue_alert', 'High Revenue Alert'),
+        ('course_created_confirmation', 'Course Created Confirmation'),
+        ('course_approved', 'Course Approved'),
+        ('course_rejected', 'Course Rejected'),
+        ('course_suspended', 'Course Suspended'),
+        ('high_value_sale_notification', 'High Value Sale Notification'),
+        ('new_course_pending_approval', 'New Course Pending Approval'),
+        ('course_updated_review_required', 'Course Updated - Review Required'),
     ]
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
