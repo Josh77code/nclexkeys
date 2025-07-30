@@ -3,7 +3,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.http import JsonResponse
 from django.utils.deprecation import MiddlewareMixin
 from users.models import User, UserSession
-from users.utils import JWTTokenManager, SecurityUtils, SecurityMonitor
+from utils.auth import JWTTokenManager, SecurityUtils, SecurityMonitor
 from django.utils import timezone
 import logging
 from django.core.cache import cache
@@ -15,44 +15,72 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):
     """
     JWT Authentication Middleware
     Processes JWT tokens and sets request.user
+    Must run AFTER Django's AuthenticationMiddleware
     """
     
     def process_request(self, request):
+        # Skip JWT authentication for admin URLs and static files
+        if request.path.startswith('/admin/') or request.path.startswith('/static/'):
+            return None
+        
         # Get token from Authorization header
         auth_header = request.META.get('HTTP_AUTHORIZATION')
         
         if not auth_header or not auth_header.startswith('Bearer '):
+            # No token provided - set anonymous user
             request.user = AnonymousUser()
             return None
         
+        # Extract token
         token = auth_header.split(' ')[1]
         
-        # Verify token
-        payload = JWTTokenManager.verify_access_token(token)
-        
-        if not payload:
-            request.user = AnonymousUser()
-            return None
-        
         try:
+            # Verify token using JWTTokenManager
+            payload, error_info = JWTTokenManager.verify_access_token(token)
+            
+            if error_info:
+                # Token verification failed - return specific error
+                return JsonResponse({
+                    'detail': error_info['message'],
+                    'error_code': error_info['error_code']
+                }, status=401)
+            
+            # Token is valid - get user from database
             user = User.objects.get(id=payload['user_id'])
             
             # Check if user is active
             if not user.is_active:
-                request.user = AnonymousUser()
-                return None
+                return JsonResponse({
+                    'detail': 'Your account has been deactivated. Contact support.',
+                    'error_code': 'ACCOUNT_INACTIVE'
+                }, status=401)
             
-            # Check if account is locked
-            if user.is_account_locked():
-                request.user = AnonymousUser()
-                return None
+            # Check if account is locked (if method exists)
+            if hasattr(user, 'is_account_locked') and user.is_account_locked():
+                return JsonResponse({
+                    'detail': 'Your account is locked due to security reasons.',
+                    'error_code': 'ACCOUNT_LOCKED'
+                }, status=401)
             
+            # Set authenticated user
             request.user = user
+            request.user.backend = 'django.contrib.auth.backends.ModelBackend'
+            
+            logger.info(f"User authenticated: {user.email} with role: {user.role}")
             return None
             
         except User.DoesNotExist:
-            request.user = AnonymousUser()
-            return None
+            return JsonResponse({
+                'detail': 'User account not found. Please login again.',
+                'error_code': 'USER_NOT_FOUND'
+            }, status=401)
+            
+        except Exception as e:
+            logger.error(f"JWT authentication error: {str(e)}")
+            return JsonResponse({
+                'detail': 'Authentication failed. Please try again.',
+                'error_code': 'AUTH_ERROR'
+            }, status=401)
 
 
 class SecurityHeadersMiddleware(MiddlewareMixin):
@@ -109,31 +137,35 @@ class SessionValidationMiddleware(MiddlewareMixin):
         if hasattr(request, 'user') and request.user.is_authenticated:
             session_token = request.META.get('HTTP_X_SESSION_TOKEN')
             
-            if session_token:
-                try:
-                    session = UserSession.objects.get(
-                        user=request.user,
-                        session_token=session_token,
-                        is_active=True
-                    )
-                    
-                    # Check if session is expired (24 hours of inactivity)
-                    if session.last_activity and (timezone.now() - session.last_activity).total_seconds() > 86400:
-                        session.is_active = False
-                        session.save()
-                        request.user = AnonymousUser()
-                        return None
-                    
-                    # Update last activity
-                    session.last_activity = timezone.now()
-                    session.save(update_fields=['last_activity'])
-                    
-                except UserSession.DoesNotExist:
-                    # Invalid session, force logout
+            # If no session token provided, skip session validation for JWT-only auth
+            if not session_token:
+                return None
+                
+            try:
+                session = UserSession.objects.get(
+                    user=request.user,
+                    session_token=session_token,
+                    is_active=True
+                )
+                
+                # Check if session is expired (24 hours of inactivity)
+                if session.last_activity and (timezone.now() - session.last_activity).total_seconds() > 86400:
+                    session.is_active = False
+                    session.save()
                     request.user = AnonymousUser()
+                    return None
+                
+                # Update last activity
+                session.last_activity = timezone.now()
+                session.save(update_fields=['last_activity'])
+                
+            except UserSession.DoesNotExist:
+                # For JWT-only authentication, don't reset user if no session token provided
+                # Only reset if session token was explicitly provided but is invalid
+                pass  # Don't reset user - let JWT authentication work
         
         return None
-
+    
 
 class RateLimitMiddleware(MiddlewareMixin):
     """
