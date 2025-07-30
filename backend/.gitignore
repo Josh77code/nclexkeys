@@ -34,3 +34,6 @@ log/
 # geoIP
 geoip/
 
+# Ngrok webhook configuration URLs
+.ngrok*
+
