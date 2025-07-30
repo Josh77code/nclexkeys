@@ -16,7 +16,10 @@ import dj_database_url
 from datetime import timedelta
 from dotenv import load_dotenv
 from celery.schedules import crontab
-
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+from decimal import Decimal
 
 # Load .env file
 load_dotenv()
@@ -36,6 +39,98 @@ DEBUG = True
 
 ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(",")
 
+# Cloudinary Configuration
+cloudinary.config(
+    cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    api_key=os.environ.get('CLOUDINARY_API_KEY'),
+    api_secret=os.environ.get('CLOUDINARY_API_SECRET'),
+    secure=True
+)
+
+# Payment Gateway Settings
+PAYMENT_GATEWAYS = {
+    'paystack': {
+        'public_key': os.environ.get('PAYSTACK_PUBLIC_KEY', ''),
+        'secret_key': os.environ.get('PAYSTACK_SECRET_KEY', ''),
+        'base_url': 'https://api.paystack.co',
+        'webhook_secret': os.environ.get('PAYSTACK_WEBHOOK_SECRET', ''),
+        'split_code': os.environ.get('PAYSTACK_SPLIT_CODE', None),
+    },
+    'flutterwave': {
+        'public_key': os.environ.get('FLUTTERWAVE_PUBLIC_KEY', ''),
+        'secret_key': os.environ.get('FLUTTERWAVE_SECRET_KEY', ''),
+        'base_url': 'https://api.flutterwave.com/v3',
+        'webhook_secret': os.environ.get('FLUTTERWAVE_WEBHOOK_SECRET', ''),
+        'encryption_key': os.environ.get('FLUTTERWAVE_ENCRYPTION_KEY', ''),
+    }
+}
+
+# Payment configuration
+PAYMENT_SETTINGS = {
+    'MAX_PAYMENT_ATTEMPTS_PER_HOUR': 5,
+    'PAYMENT_EXPIRY_MINUTES': 30,
+    'MIN_COURSE_PRICE': Decimal('500.00'),  # 500 NGN minimum
+    'MAX_COURSE_PRICE': Decimal('500000.00'),  # 500k NGN maximum
+    'AUTO_REFUND_THRESHOLD': Decimal('50000.00'),  # Auto-process refunds below 50k
+    'INSTRUCTOR_REVENUE_SHARE': Decimal('0.70'),  # 70% to instructor
+    'PLATFORM_REVENUE_SHARE': Decimal('0.30'),  # 30% to platform
+}
+
+# Optional: YouTube API key for better duration extraction
+YOUTUBE_API_KEY = os.environ.get('YOUTUBE_API_KEY')
+
+# Video processing settings
+VIDEO_PROCESSING = {
+    'MAX_FILE_SIZE_GB': 1,  # 1GB max per video
+    'SUPPORTED_FORMATS': ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm'],
+    'AUTO_GENERATE_THUMBNAILS': True,
+    'EXTRACT_DURATION': True,
+}
+
+# Nigerian Bank Codes (for reference)
+NIGERIAN_BANK_CODES = {
+    'ACCESS_BANK': '044',
+    'CITIBANK': '023',
+    'DIAMOND_BANK': '063',
+    'ECOBANK': '050',
+    'FIDELITY_BANK': '070',
+    'FIRST_BANK': '011',
+    'FIRST_CITY_MONUMENT_BANK': '214',
+    'GUARANTY_TRUST_BANK': '058',
+    'HERITAGE_BANK': '030',
+    'KEYSTONE_BANK': '082',
+    'POLARIS_BANK': '076',
+    'PROVIDUS_BANK': '101',
+    'STANBIC_IBTC': '221',
+    'STANDARD_CHARTERED': '068',
+    'STERLING_BANK': '232',
+    'UNION_BANK': '032',
+    'UNITED_BANK_FOR_AFRICA': '033',
+    'UNITY_BANK': '215',
+    'WEMA_BANK': '035',
+    'ZENITH_BANK': '057',
+}
+
+# Payment Settings
+DEFAULT_CURRENCY = 'NGN'
+SUPPORTED_CURRENCIES = ['NGN', 'USD', 'GHS', 'KES']
+DEFAULT_PAYMENT_GATEWAY = 'paystack'
+SITE_URL = os.environ.get('SITE_URL', 'https://yourdomain.com')
+
+# Course Creator Settings
+ALLOW_USER_COURSE_CREATION = True
+COURSE_APPROVAL_REQUIRED = True  # Set to False if you want auto-approval
+INSTRUCTOR_REVENUE_SHARE = 70  # Percentage that goes to instructor (70%)
+PLATFORM_REVENUE_SHARE = 30   # Percentage that goes to platform (30%)
+
+# Email Settings for Course Management
+COURSE_NOTIFICATION_EMAILS = {
+    'NEW_COURSE_SUBMISSION': True,
+    'COURSE_APPROVED': True,
+    'COURSE_REJECTED': True,
+    'NEW_ENROLLMENT': True,
+    'COURSE_COMPLETED': True,
+}
 
 # Application definition
 
@@ -45,7 +140,10 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary',
+    'django_celery_beat',
 
     # Third-party apps
     'rest_framework',
@@ -67,13 +165,14 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'common.middleware.JWTAuthenticationMiddleware',
+    'common.debug_middleware.DebugUserMiddleware',
     'common.middleware.SessionValidationMiddleware',
     'common.middleware.RateLimitMiddleware', 
     'common.middleware.SecurityHeadersMiddleware',  
     'common.middleware.RequestLoggingMiddleware',
     'common.middleware.UserActivityMiddleware', 
     'common.middleware.SuspiciousActivityMiddleware', 
+    'common.course_middleware.PaymentSecurityMiddleware',
     'common.middleware.ErrorHandlingMiddleware', 
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -98,13 +197,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 # JWT Settings
 JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
-JWT_ACCESS_TOKEN_LIFETIME = 15  # minutes
+JWT_ACCESS_TOKEN_LIFETIME = 60  # minutes
 JWT_REFRESH_TOKEN_LIFETIME = 7   # days
 
 # Email Settings
@@ -169,15 +267,29 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Cache Settings (for rate limiting)
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': os.environ.get('REDIS_URL'),
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+if os.environ.get("REDIS_URL"):
+    # Use Redis if environment variable is set
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': os.environ.get("REDIS_URL"),
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                # Optional: password, SSL, parser class, etc.
+            }
         }
     }
-}
+    print("✅ Using Redis cache:", os.environ.get("REDIS_URL"))
+else:
+    # Fallback to built-in in-memory cache
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'unique',
+        }
+    }
+    print("⚠️ Using in-memory cache (Redis not configured)")
+
 
 # GeoIP2 Settings (for location detection)
 GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
@@ -203,11 +315,14 @@ CORS_ALLOW_CREDENTIALS = True
 # REST Framework Settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # It's handled by middleware
-        #'common.middleware.JWTAuthenticationMiddleware',
+        'common.authentication.JWTAuthentication',
+        # Optionally keep session auth for admin panel:
+        # 'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        #'rest_framework.permissions.IsAuthenticated',
+        # We'll use custom permissions instead of IsAuthenticated
+        'rest_framework.permissions.AllowAny',  # Let middleware handle auth
     ],
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
@@ -237,51 +352,69 @@ CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
 CELERY_TIMEZONE = 'UTC'
 
 CELERY_TASK_ROUTES = {
-    'your_app.tasks.cleanup_old_records': {'queue': 'cleanup'},
-    'your_app.tasks.cleanup_expired_tokens': {'queue': 'cleanup'},
-    'your_app.tasks.process_scheduled_deletions': {'queue': 'high_priority'},
-    'your_app.tasks.send_deletion_reminders': {'queue': 'emails'},
-    'your_app.tasks.database_health_check': {'queue': 'monitoring'},
+    'management.tasks.cleanup_old_records': {'queue': 'cleanup'},
+    'management.tasks.cleanup_expired_tokens': {'queue': 'cleanup'},
+    'management.tasks.process_scheduled_deletions': {'queue': 'high_priority'},
+    'management.tasks.send_deletion_reminders': {'queue': 'emails'},
+    'management.tasks.database_health_check': {'queue': 'monitoring'},
 }
 
 # Celery Beat Schedule
 CELERY_BEAT_SCHEDULE = {
+    # Run monthly payout calculation on 1st of every month at 2 AM
+    'create-monthly-payouts': {
+        'task': 'payments.tasks.create_monthly_payouts_task',
+        'schedule': crontab(hour=2, minute=0, day_of_month=1),
+    },
+    # Auto-process small payouts daily at 10 AM
+    'auto-process-payouts': {
+        'task': 'payments.tasks.process_auto_payouts',
+        'schedule': crontab(hour=10, minute=0),
+        'kwargs': {'max_amount': 10000}  # Auto-process up to 10k NGN
+    },
     'cleanup-old-records': {
-        'task': 'your_app.tasks.cleanup_old_records',
+        'task': 'management.tasks.cleanup_old_records',
         'schedule': crontab(hour=2, minute=0),  # Run daily at 2 AM
     },
     'cleanup-expired-tokens': {
-        'task': 'your_app.tasks.cleanup_expired_tokens',
+        'task': 'management.tasks.cleanup_expired_tokens',
         'schedule': crontab(minute=0, hour='*/6'),  # Run every 6 hours
     },
     'process-scheduled-deletions': {
-        'task': 'your_app.tasks.process_scheduled_deletions',
+        'task': 'management.tasks.process_scheduled_deletions',
         'schedule': crontab(hour=3, minute=0),  # Run daily at 3 AM
     },
     'cleanup-inactive-sessions': {
-        'task': 'your_app.tasks.cleanup_inactive_sessions',
+        'task': 'management.tasks.cleanup_inactive_sessions',
         'schedule': crontab(minute=0, hour='*/12'),  # Run every 12 hours
     },
     'cleanup-old-login-attempts': {
-        'task': 'your_app.tasks.cleanup_old_login_attempts',
+        'task': 'management.tasks.cleanup_old_login_attempts',
         'schedule': crontab(hour=4, minute=0, day_of_week=0),  # Run weekly on Sunday
     },
     'cleanup-old-email-logs': {
-        'task': 'your_app.tasks.cleanup_old_email_logs',
+        'task': 'management.tasks.cleanup_old_email_logs',
         'schedule': crontab(hour=5, minute=0, day_of_month=1),  # Run monthly
     },
     'send-deletion-reminders': {
-        'task': 'your_app.tasks.send_deletion_reminders',
+        'task': 'management.tasks.send_deletion_reminders',
         'schedule': crontab(hour=10, minute=0),  # Run daily at 10 AM
     },
     'database-health-check': {
-        'task': 'your_app.tasks.database_health_check',
+        'task': 'management.tasks.database_health_check',
         'schedule': crontab(hour=1, minute=0),  # Run daily at 1 AM
     },
 }
 
 
+
 # Logging Configuration
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOG_DIR = os.path.join(BASE_DIR, 'log')
+
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -297,35 +430,24 @@ LOGGING = {
     },
     'handlers': {
         'file': {
-        'level': 'INFO',
-        'class': 'logging.handlers.RotatingFileHandler',
-        'filename': os.path.join(BASE_DIR, 'log', 'app.log'),
-        'maxBytes': 1024*1024*5,  # 5MB
-        'backupCount': 3,
-        'formatter': 'verbose',
-    },
-
-
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(LOG_DIR, 'app.log'),
+            'maxBytes': 1024*512,  # 512 KB
+            'backupCount': 2,      # Only 2 backups
+            'formatter': 'verbose',
+        },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
         },
     },
-    'loggers': {
-        'authentication': {
-            'handlers': ['file', 'console'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-        'root': {
-            'handlers': ['console'],
-            'level': 'WARNING',
-        },
-
+    'root': {
+        'handlers': ['file', 'console'],  # Send logs to file and console
+        'level': 'INFO',
     },
 }
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
@@ -337,6 +459,28 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+# Media files configuration for Cloudinary
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET')
+}
+
+# Use Cloudinary for media storage
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# Video upload limits
+MAX_VIDEO_SIZE = 500 * 1024 * 1024  # 500MB
+ALLOWED_VIDEO_FORMATS = ['mp4', 'mov', 'avi', 'mkv']
+
+# Course limits per user
+MAX_COURSES_PER_INSTRUCTOR = 50  # Set to None for unlimited
+FREE_COURSES_LIMIT = 5  # How many free courses an instructor can create
+
+# Media URL and Root (Cloudinary handles this)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Static files (CSS, JavaScript, Images)
