@@ -1,0 +1,62 @@
+<!-- emails/instructor/appeal_rejected.html -->
+{% extends 'emails/base.html' %}
+
+{% block title %}Appeal Decision - NCLEX Virtual School{% endblock %}
+
+{% block header %}Appeal Decision{% endblock %}
+
+{% block content %}
+<h2>Your Course Appeal Decision</h2>
+
+<p>Dear {{ instructor_name }},</p>
+
+<div class="alert alert-danger">
+    <strong>Appeal Decision:</strong> After careful review, your appeal for "{{ course_title }}" has not been approved at this time.
+</div>
+
+<h3>Appeal Decision Details:</h3>
+<ul>
+    <li><strong>Course:</strong> {{ course_title }}</li>
+    <li><strong>Decision:</strong> <span style="color: #dc3545; font-weight: bold;">NOT APPROVED</span></li>
+    <li><strong>Reviewed by:</strong> {{ reviewed_by }}</li>
+    <li><strong>Decision Date:</strong> {{ reviewed_at|date:"F d, Y \a\t g:i A" }}</li>
+</ul>
+
+<h3>Feedback and Next Steps:</h3>
+<div style="background-color: #f8d7da; padding: 15px; border-radius: 6px; margin: 15px 0; border-left: 4px solid #dc3545;">
+    <p style="margin: 0;">"{{ review_notes }}"</p>
+</div>
+
+<h3>What You Can Do:</h3>
+<ol>
+    <li><strong>Address the Issues:</strong> Review the feedback provided and make necessary changes to your course content</li>
+    <li><strong>Update Your Course:</strong> Modify the course materials to align with our platform policies</li>
+    <li><strong>Submit a New Appeal:</strong> Once you've made improvements, you can submit a new appeal</li>
+    <li><strong>Contact Support:</strong> If you need clarification on the feedback, reach out to our support team</li>
+</ol>
+
+<div class="alert">
+    <p><strong>Important Information:</strong></p>
+    <ul>
+        <li>Your course remains suspended until the issues are resolved</li>
+        <li>You can make edits to your course content even while it's suspended</li>
+        <li>New appeals can be submitted after making improvements</li>
+        <li>Our team is here to help you succeed - don't hesitate to ask for guidance</li>
+    </ul>
+</div>
+
+<h3>Platform Policies and Guidelines:</h3>
+<p>To help you understand our content standards, please review:</p>
+<ul>
+    <li>Course Content Guidelines</li>
+    <li>Instructor Code of Conduct</li>
+    <li>Quality Standards for Educational Content</li>
+</ul>
+
+<p>We want to see you succeed on {{ platform_name }} and are committed to helping you create high-quality educational content.</p>
+
+<p>If you have questions about this decision or need guidance on improving your course, please contact us at {{ support_email }}.</p>
+
+<p>Best regards,<br>
+<strong>The {{ platform_name }} Moderation Team</strong></p>
+{% endblock %}

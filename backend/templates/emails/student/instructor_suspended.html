@@ -1,0 +1,75 @@
+<!-- emails/student/instructor_suspended.html -->
+{% extends 'emails/base.html' %}
+
+{% block title %}Important Course Update - NCLEX Virtual School{% endblock %}
+
+{% block header %}Important Update{% endblock %}
+
+{% block content %}
+<h2>Important Update About Your Enrolled Courses</h2>
+
+<p>Dear {{ student_name }},</p>
+
+<div class="alert">
+    <strong>Course Status Update:</strong> We need to inform you that your instructor {{ instructor_name }} {{ message }} and your enrolled courses are temporarily unavailable.
+</div>
+
+<h3>Affected Courses ({{ courses_count }} total):</h3>
+<ul>
+{% for course in affected_courses %}
+    <li><strong>{{ course.title }}</strong> <span class="exam-pill exam-type-{{ course.course_type|lower }}">{{ course.course_type|capfirst }}</span></li>
+{% endfor %}
+</ul>
+
+<h3>What This Means for You:</h3>
+<ul>
+    <li>These courses are temporarily suspended and not accessible</li>
+    <li>Your enrollment status remains active</li>
+    <li>Your progress, scores, and certificates are safely preserved</li>
+    <li>No additional payments are required</li>
+    <li>Each course will undergo individual review</li>
+</ul>
+
+<div class="alert alert-success">
+    <p><strong>Your Investment is Protected:</strong> Your course progress, completed assignments, quiz results, and any certificates earned are securely stored and will be available if/when courses are restored.</p>
+</div>
+
+<h3>Next Steps:</h3>
+<ol>
+    <li><strong>Review Process:</strong> Each course will be individually evaluated</li>
+    <li><strong>Course-by-Course Decisions:</strong> Some courses may be restored while others may not</li>
+    <li><strong>Individual Notifications:</strong> You'll receive separate emails about each course's status</li>
+    <li><strong>Alternative Options:</strong> We'll help you find suitable replacement courses if needed</li>
+</ol>
+
+<h3>What You Can Do Now:</h3>
+<ul>
+    <li>Continue with any other courses you're enrolled in</li>
+    <li>Browse our course catalog for similar topics</li>
+    <li>Consider courses from other qualified instructors</li>
+    <li>Contact support for personalized course recommendations</li>
+</ul>
+
+<p style="text-align: center; margin: 30px 0;">
+    <a href="{{ browse_courses_url }}" class="button">Find Alternative Courses</a>
+</p>
+
+<div class="alert">
+    <p><strong>Our Commitment to You:</strong></p>
+    <ul>
+        <li>We'll keep you updated on the status of each course</li>
+        <li>If courses cannot be restored, we'll help you find suitable alternatives</li>
+        <li>Your learning journey on {{ platform_name }} continues with our full support</li>
+        <li>Our support team is available to answer any questions</li>
+    </ul>
+</div>
+
+<p>We understand this situation is disappointing and apologize for any disruption to your learning. Our content review process exists to maintain the highest educational standards for all students.</p>
+
+<p>If you have questions about specific courses, need help finding alternatives, or require any assistance, please don't hesitate to contact our support team at {{ support_email }}.</p>
+
+<p>Thank you for your patience and continued commitment to your education through {{ platform_name }}.</p>
+
+<p>Best regards,<br>
+<strong>The {{ platform_name }} Team</strong></p>
+{% endblock %}

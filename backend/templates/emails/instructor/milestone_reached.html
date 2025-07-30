@@ -1,0 +1,81 @@
+<!-- emails/instructor/milestone_reached.html -->
+{% extends "emails/base.html" %}
+
+{% block title %}🎉 Milestone: {{ milestone }} Students!{% endblock %}
+
+{% block header %}🎉 Amazing Milestone Reached!{% endblock %}
+
+{% block content %}
+<h2>Congratulations {{ instructor.first_name|default:"Instructor" }}!</h2>
+
+<p>This is a moment to celebrate! Your course has reached an incredible milestone.</p>
+
+<div class="alert alert-success">
+    <strong>🎉 {{ milestone }} Students Milestone Reached!</strong>
+    <p>Your course "{{ course.title }}" now has {{ milestone }} enrolled students!</p>
+</div>
+
+<h3>Course Achievement</h3>
+<div style="background: linear-gradient(135deg, #ff6b6b, #feca57); color: white; padding: 30px; margin: 20px 0; border-radius: 12px; text-align: center;">
+    <h4 style="margin: 0 0 10px 0; font-size: 24px;">{{ course.title }}</h4>
+    <div style="font-size: 48px; font-weight: bold; margin: 20px 0;">{{ milestone }}</div>
+    <div style="font-size: 18px; opacity: 0.9;">Enrolled Students</div>
+</div>
+
+<h3>What This Milestone Means</h3>
+<ul>
+    {% if milestone <= 50 %}
+    <li>You're building a solid foundation of learners</li>
+    <li>Your content is resonating with students</li>
+    <li>Word-of-mouth marketing is starting to work</li>
+    {% elif milestone <= 100 %}
+    <li>You've established yourself as a trusted educator</li>
+    <li>Your course has proven market demand</li>
+    <li>You're ready to scale your teaching business</li>
+    {% elif milestone <= 500 %}
+    <li>You're now reaching hundreds of lives with your knowledge</li>
+    <li>Your expertise is making a significant impact</li>
+    <li>Consider creating advanced or specialized courses</li>
+    {% else %}
+    <li>You've achieved elite instructor status!</li>
+    <li>Your teaching has massive reach and influence</li>
+    <li>You're ready for speaking engagements and partnerships</li>
+    {% endif %}
+</ul>
+
+<h3>Latest Student</h3>
+<p>Your milestone was reached when <strong>{{ latest_student.full_name }}</strong> enrolled!</p>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ analytics_url }}" class="button" style="margin-right: 10px;">View Analytics</a>
+    <a href="{{ course_url }}" class="button" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Manage Course</a>
+</div>
+
+<div class="alert alert-success">
+    <strong>🚀 Keep the Momentum</strong>
+    <p>
+    {% if milestone <= 50 %}
+    Focus on getting your first 5-star reviews and consider running a limited-time promotion!
+    {% elif milestone <= 100 %}
+    Now's the perfect time to create a course series or offer group coaching!
+    {% else %}
+    You could launch a premium mentorship program or write a book about your expertise!
+    {% endif %}
+    </p>
+</div>
+
+<h3>Celebration Ideas</h3>
+<ul>
+    <li>Share this achievement on social media</li>
+    <li>Thank your students with a special message</li>
+    <li>Create bonus content as a celebration gift</li>
+    <li>Plan your next course or teaching milestone</li>
+</ul>
+
+<p>We're incredibly proud of your achievement and the positive impact you're making on students' lives!</p>
+
+<p style="margin-top: 30px;">
+    Congratulations again,<br>
+    <strong>NCLEX Virtual School Team</strong>
+</p>
+{% endblock %}

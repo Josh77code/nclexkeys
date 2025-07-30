@@ -1,0 +1,77 @@
+
+<!-- emails/platform_admin/weekly_moderation_summary.html -->
+{% extends 'emails/base.html' %}
+
+{% block title %}Weekly Moderation Summary - NCLEX Virtual School{% endblock %}
+
+{% block header %}Weekly Moderation Summary{% endblock %}
+
+{% block content %}
+<h2>Weekly Moderation Summary</h2>
+
+<p>Dear {{ admin_name }},</p>
+
+<p>Here's your weekly summary of moderation activities for the week ending {{ week_ending }}.</p>
+
+<h3>📊 Overview Statistics</h3>
+<ul>
+    <li><strong>Total Suspended Courses:</strong> {{ stats.total_suspended_courses }}</li>
+    <li><strong>Recently Suspended (This Week):</strong> {{ stats.recently_suspended }}</li>
+    <li><strong>Pending Appeals:</strong> {{ stats.pending_appeals }}</li>
+    <li><strong>New Appeals (This Week):</strong> {{ stats.recent_appeals }}</li>
+    <li><strong>Overdue Appeals (>7 days):</strong> 
+        <span style="color: {% if stats.overdue_appeals > 5 %}#dc3545{% elif stats.overdue_appeals > 2 %}#ffc107{% else %}#28a745{% endif %}; font-weight: bold;">
+            {{ stats.overdue_appeals }}
+        </span>
+    </li>
+</ul>
+
+{% if stats.overdue_appeals > 0 %}
+<div class="alert alert-danger">
+    <p><strong>⚠️ Attention Required:</strong> There are {{ stats.overdue_appeals }} appeals that have been pending for more than 7 days. Prompt review helps maintain good instructor relationships.</p>
+</div>
+{% endif %}
+
+<h3>👥 Instructors with Suspended Courses</h3>
+{% if stats.top_suspended_instructors %}
+<p>Top instructors by number of suspended courses:</p>
+<ol>
+{% for instructor in stats.top_suspended_instructors %}
+    <li><strong>{{ instructor.created_by__full_name }}</strong> ({{ instructor.created_by__email }}) - {{ instructor.suspended_count }} course{{ instructor.suspended_count|pluralize }}</li>
+{% endfor %}
+</ol>
+{% else %}
+<p>No instructors currently have suspended courses.</p>
+{% endif %}
+
+<h3>📈 Action Items</h3>
+<ul>
+    {% if stats.pending_appeals > 0 %}
+    <li>Review {{ stats.pending_appeals }} pending appeal{{ stats.pending_appeals|pluralize }}</li>
+    {% endif %}
+    {% if stats.overdue_appeals > 0 %}
+    <li><strong>Priority:</strong> Address {{ stats.overdue_appeals }} overdue appeal{{ stats.overdue_appeals|pluralize }}</li>
+    {% endif %}
+    {% if stats.total_suspended_courses > 10 %}
+    <li>Consider bulk review of older suspended courses</li>
+    {% endif %}
+    <li>Monitor instructor communication and satisfaction</li>
+</ul>
+
+<p style="text-align: center; margin: 30px 0;">
+    <a href="{{ admin_dashboard_url }}" class="button">Access Admin Dashboard</a>
+</p>
+
+<h3>📅 Recommended Actions This Week</h3>
+<ol>
+    <li>Prioritize overdue appeals to maintain instructor relationships</li>
+    <li>Review recently suspended courses for consistency</li>
+    <li>Consider reaching out to instructors with multiple suspended courses</li>
+    <li>Monitor appeal patterns for policy improvement opportunities</li>
+</ol>
+
+<p>This automated summary is sent every Monday. If you need to adjust the frequency or content, please contact the development team.</p>
+
+<p>Best regards,<br>
+<strong>{{ platform_name }} Moderation System</strong></p>
+{% endblock %}

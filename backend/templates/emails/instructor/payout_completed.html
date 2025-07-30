@@ -1,0 +1,56 @@
+<!-- emails/instructor/payout_completed.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Payout Completed - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>💰 Your Payout Has Been Completed!</h2>
+
+<p>Hello {{ instructor.full_name }},</p>
+
+<p>Great news! Your instructor payout has been successfully processed and should be in your account within 1-3 business days.</p>
+
+<div class="alert alert-success">
+    <h3>Payout Details:</h3>
+    <ul>
+        <li><strong>Payout Period:</strong> {{ period_start|date:"M d, Y" }} - {{ period_end|date:"M d, Y" }}</li>
+        <li><strong>Total Revenue Generated:</strong> ₦{{ total_revenue|floatformat:2 }}</li>
+        <li><strong>Your Share (70%):</strong> ₦{{ instructor_share|floatformat:2 }}</li>
+        <li><strong>Platform Fee (30%):</strong> ₦{{ platform_fee|floatformat:2 }}</li>
+        <li><strong>Net Payout Amount:</strong> ₦{{ net_payout|floatformat:2 }}</li>
+        <li><strong>Reference:</strong> {{ payout.gateway_reference }}</li>
+    </ul>
+</div>
+
+<div class="alert alert-info">
+    <h3>Payout Breakdown:</h3>
+    {% if payout.previous_advance > 0 %}
+    <p><strong>Previous Advance Deducted:</strong> -₦{{ payout.previous_advance|floatformat:2 }}</p>
+    {% endif %}
+    {% if payout.refund_deductions > 0 %}
+    <p><strong>Refund Deductions:</strong> -₦{{ payout.refund_deductions|floatformat:2 }}</p>
+    {% endif %}
+    <p><strong>Final Amount Transferred:</strong> ₦{{ net_payout|floatformat:2 }}</p>
+</div>
+
+<h3>📊 Want to Earn More?</h3>
+<p>Here's how you can increase your monthly earnings:</p>
+<ul>
+    <li>Create more high-quality courses</li>
+    <li>Optimize your course descriptions and thumbnails</li>
+    <li>Engage with your students in course discussions</li>
+    <li>Update existing courses with new content</li>
+    <li>Promote your courses on social media</li>
+</ul>
+
+<div class="button-group">
+    <a href="{{ earnings_url }}" class="button">View Detailed Earnings</a>
+    <a href="{{ dashboard_url }}" class="button">Go to Dashboard</a>
+</div>
+
+<p>If you don't receive the payout in your account within 3 business days, please contact our support team.</p>
+
+<p>Thank you for being a valued instructor!</p>
+
+<p>Best regards,<br>The NCLEX Virtual School Team</p>
+{% endblock %}

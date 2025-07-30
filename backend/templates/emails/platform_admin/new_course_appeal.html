@@ -1,0 +1,38 @@
+<!-- emails/platform_admin/new_course_appeal.html -->
+{% extends 'emails/base.html' %}
+
+{% block title %}New Course Appeal - NCLEX Virtual School{% endblock %}
+
+{% block header %}New Course Appeal{% endblock %}
+
+{% block content %}
+<h2>New Course Appeal Submitted</h2>
+
+<p>A new course appeal has been submitted and requires your review.</p>
+
+<h3>Appeal Details:</h3>
+<ul>
+    <li><strong>Course:</strong> {{ course_title }}</li>
+    <li><strong>Instructor:</strong> {{ instructor_name }} ({{ instructor_email }})</li>
+    <li><strong>Appeal ID:</strong> {{ appeal.id }}</li>
+    <li><strong>Submitted:</strong> {{ appeal.created_at|date:"F d, Y \a\t g:i A" }}</li>
+</ul>
+
+<h3>Instructor's Appeal Reason:</h3>
+<div style="background-color: #f8f9fa; padding: 15px; border-radius: 6px; margin: 15px 0;">
+    <p style="margin: 0; font-style: italic;">"{{ appeal_reason }}"</p>
+</div>
+
+<p style="text-align: center; margin: 30px 0;">
+    <a href="{{ review_url }}" class="button">Review Appeal</a>
+</p>
+
+<p>Please review this appeal promptly. The instructor is waiting for a decision, and timely responses help maintain good relationships with our content creators.</p>
+
+<p style="text-align: center; margin: 20px 0;">
+    <a href="{{ appeals_dashboard_url }}" style="color: #004d99; text-decoration: none;">View All Pending Appeals →</a>
+</p>
+
+<p>Best regards,<br>
+<strong>{{ platform_name }} System</strong></p>
+{% endblock %}

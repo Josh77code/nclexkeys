@@ -1,0 +1,13 @@
+{% extends "emails/base.html" %}
+{% block title %}Refund Review Required{% endblock %}
+{% block header %}Refund Review Needed{% endblock %}
+
+{% block content %}
+  <h2>A refund request requires your review</h2>
+  <p><strong>User:</strong> {{ user.full_name }} ({{ user.email }})</p>
+  <p><strong>Course:</strong> {{ course.title }}</p>
+  <p><strong>Amount:</strong> {{ refund.amount }} {{ payment.currency }}</p>
+  <p><strong>Reason:</strong> {{ refund.reason|default:"No reason provided." }}</p>
+  
+  <a href="{{ site_url }}/admin/refunds/{{ refund.id }}" class="button">Review Refund</a>
+{% endblock %}

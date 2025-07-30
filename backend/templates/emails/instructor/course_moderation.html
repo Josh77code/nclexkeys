@@ -1,0 +1,85 @@
+<!-- emails/instructor/course_moderation.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Course {{ action|capfirst }} - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>📋 Course Moderation Update</h2>
+
+<p>Hello {{ instructor.full_name }},</p>
+
+{% if action == 'approved' %}
+<p>🎉 Great news! Your course has been <strong>approved</strong> and is now live on our platform!</p>
+
+<div class="alert alert-success">
+    <h3>Course Details:</h3>
+    <ul>
+        <li><strong>Course:</strong> {{ course.title }}</li>
+        <li><strong>Status:</strong> Approved & Live</li>
+        <li><strong>Action Date:</strong> {{ course.moderated_at|date:"F d, Y g:i A" }}</li>
+    </ul>
+</div>
+
+<p>Your course is now visible to students and available for enrollment. Start promoting it to get your first students!</p>
+
+<h3>🚀 Next Steps:</h3>
+<ul>
+    <li>Share your course link on social media</li>
+    <li>Engage with students who enroll</li>
+    <li>Monitor course reviews and feedback</li>
+    <li>Consider creating additional courses</li>
+</ul>
+
+{% elif action == 'rejected' %}
+<p>We've reviewed your course and unfortunately it doesn't meet our current standards for publication.</p>
+
+<div class="alert alert-danger">
+    <h3>Course Details:</h3>
+    <ul>
+        <li><strong>Course:</strong> {{ course.title }}</li>
+        <li><strong>Status:</strong> Rejected</li>
+        <li><strong>Action Date:</strong> {{ course.moderated_at|date:"F d, Y g:i A" }}</li>
+        <li><strong>Reason:</strong> {{ reason }}</li>
+    </ul>
+</div>
+
+<h3>📝 What You Can Do:</h3>
+<ul>
+    <li>Review the feedback provided above</li>
+    <li>Make the necessary improvements to your course</li>
+    <li>Resubmit your course for review</li>
+    <li>Contact support if you need clarification</li>
+</ul>
+
+{% elif action == 'suspended' %}
+<p>⚠️ Your course has been temporarily suspended and is no longer visible to students.</p>
+
+<div class="alert alert-warning">
+    <h3>Course Details:</h3>
+    <ul>
+        <li><strong>Course:</strong> {{ course.title }}</li>
+        <li><strong>Status:</strong> Suspended</li>
+        <li><strong>Action Date:</strong> {{ course.moderated_at|date:"F d, Y g:i A" }}</li>
+        <li><strong>Reason:</strong> {{ reason }}</li>
+    </ul>
+</div>
+
+<h3>🔧 Resolution Steps:</h3>
+<ul>
+    <li>Address the issues mentioned in the reason above</li>
+    <li>Contact our support team for clarification if needed</li>
+    <li>Once resolved, your course can be reactivated</li>
+    <li>Existing students retain access during suspension</li>
+</ul>
+
+{% endif %}
+
+<div class="button-group">
+    <a href="{{ course_url }}" class="button">View Course</a>
+    <a href="{{ dashboard_url }}" class="button">Go to Dashboard</a>
+</div>
+
+<p>If you have questions about this decision or our course guidelines, please contact our support team.</p>
+
+<p>Best regards,<br>The NCLEX Virtual School Team</p>
+{% endblock %}

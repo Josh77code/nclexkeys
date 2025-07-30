@@ -1,0 +1,75 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Course Approved - {{ course.title }}{% endblock %}
+
+{% block header %}🎉 Course Approved!{% endblock %}
+
+{% block content %}
+<h2>Hello {{ instructor.first_name|default:"Course Creator" }},</h2>
+
+<p>Excellent news! Your course has been approved and is now live on our platform.</p>
+
+<div class="alert alert-success">
+    <strong>✅ Course Approved</strong>
+    <p>Your course "{{ course.title }}" has been reviewed and approved by our content team.</p>
+</div>
+
+<h3>Course Details</h3>
+
+<div style="background: #e8f5e9; border-left: 4px solid #28a745; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+    <h4 style="margin-top: 0; color: #28a745;">{{ course.title }}</h4>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Status:</strong> 
+        <span style="color: #28a745; font-weight: 600;">✓ Live & Published</span>
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Course URL:</strong> <a href="{{ course_url }}">View Your Course</a>
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Approved Date:</strong> {{ "now"|date:"F j, Y \a\t g:i A" }}
+    </div>
+    
+    {% if reason %}
+    <div style="margin-bottom: 0;">
+        <strong>Reviewer Notes:</strong> {{ reason }}
+    </div>
+    {% endif %}
+</div>
+
+<h3>What This Means</h3>
+<ul>
+    <li>Students can now discover and enroll in your course</li>
+    <li>Your course is searchable on our platform</li>
+    <li>You'll start earning from enrollments immediately</li>
+    <li>Course analytics are now available in your dashboard</li>
+</ul>
+
+<h3>Getting Started as an Instructor</h3>
+<ul>
+    <li>Monitor your course performance and student progress</li>
+    <li>Respond to student questions and reviews</li>
+    <li>Consider creating additional courses</li>
+    <li>Promote your course on social media</li>
+</ul>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ course_url }}" class="button" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+        View Live Course
+    </a>
+</div>
+
+<div class="alert alert-success">
+    <strong>💰 Earning Information</strong>
+    <p>You earn 70% of each paid enrollment. Payouts are processed monthly. Track your earnings in your instructor dashboard.</p>
+</div>
+
+<p>Congratulations on creating quality content for our learning community!</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>NCLEX Virtual School Team</strong>
+</p>
+{% endblock %}

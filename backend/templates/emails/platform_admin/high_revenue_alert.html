@@ -1,0 +1,39 @@
+{% extends "emails/base.html" %}
+
+{% block title %}High Revenue Alert - ${{ enrollment.amount_paid }}{% endblock %}
+
+{% block header %}💰 High Revenue Alert{% endblock %}
+
+{% block content %}
+<h2>Hello Super Admin,</h2>
+
+<p>A very high-value enrollment has been recorded that exceeds our $1000 threshold.</p>
+
+<div class="alert alert-success">
+    <strong>🚨 High Revenue Enrollment - ${{ enrollment.amount_paid }}</strong>
+    <p>This enrollment significantly contributes to platform revenue.</p>
+</div>
+
+<h3>Enrollment Details</h3>
+<ul>
+    <li><strong>Student:</strong> {{ enrollment.user.full_name }}</li>
+    <li><strong>Course:</strong> {{ enrollment.course.title }}</li>
+    <li><strong>Amount:</strong> ${{ enrollment.amount_paid }}</li>
+    <li><strong>Platform Share ({{ commission_rate }}):</strong> <span style="color: #28a745; font-weight: 600;">${{ platform_revenue }}</span></li>
+    <li><strong>Instructor:</strong> {{ enrollment.course.created_by.full_name }}</li>
+    <li><strong>Date:</strong> {{ enrollment.enrolled_at|date:"F j, Y" }}</li>
+</ul>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ settings.FRONTEND_URL }}/super-admin/revenue-analytics" class="button">
+        View Revenue Dashboard
+    </a>
+</div>
+
+<p>Monitor similar high-value enrollments to identify trends and optimize platform performance.</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>NCLEX Virtual School System</strong>
+</p>
+{% endblock %}

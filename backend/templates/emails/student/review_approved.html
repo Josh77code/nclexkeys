@@ -1,0 +1,86 @@
+<!-- emails/user/review_approved.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Review Approved - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>✅ Your Review Has Been Approved!</h2>
+
+<p>Hello {{ user.full_name }},</p>
+
+<p>Great news! Your review for the course <strong>"{{ course.title }}"</strong> has been approved and is now live on our platform.</p>
+
+<div class="alert alert-success">
+    <h3>Your Review:</h3>
+    <div class="review-content">
+        <div class="rating">
+            <strong>Rating:</strong> 
+            {% for i in "12345"|make_list %}
+                {% if forloop.counter <= review.rating %}
+                    ⭐
+                {% else %}
+                    ☆
+                {% endif %}
+            {% endfor %}
+            ({{ review.rating }}/5)
+        </div>
+        <div class="review-text">
+            <strong>Your Review:</strong>
+            <blockquote>
+                {{ review.review_text|default:"No written review provided." }}
+            </blockquote>
+        </div>
+        <div class="review-meta">
+            <small><strong>Submitted:</strong> {{ review.created_at|date:"F d, Y \a\t H:i" }}</small>
+        </div>
+    </div>
+</div>
+
+<div class="course-info">
+    <h4>Course Details:</h4>
+    <ul>
+        <li><strong>Course:</strong> {{ course.title }}</li>
+        <li><strong>Category:</strong> {{ course.get_category_display }}</li>
+        <li><strong>Difficulty:</strong> {{ course.get_difficulty_level_display }}</li>
+    </ul>
+</div>
+
+<h4>Thank You for Your Feedback!</h4>
+<p>Your honest review helps other students make informed decisions about their learning journey. Reviews like yours create a better learning community for everyone.</p>
+
+<div class="actions">
+    <a href="{{ course_url }}" class="button">View Course</a>
+    <a href="{{ reviews_url }}" class="button-secondary">See All Reviews</a>
+</div>
+
+<div class="alert">
+    <h4>💡 Did You Know?</h4>
+    <p>Students who leave reviews are 40% more likely to complete their courses successfully. Keep up the great engagement!</p>
+</div>
+
+<div class="next-steps">
+    <h4>What's Next?</h4>
+    <ul>
+        <li>Continue your learning journey with other courses</li>
+        <li>Share your progress with friends and colleagues</li>
+        <li>Leave reviews for other courses you've completed</li>
+        <li>Join our community discussions</li>
+    </ul>
+</div>
+
+<div class="alert">
+    <p><strong>Need Help?</strong></p>
+    <p>If you have any questions about your review or our platform, please contact us at <a href="mailto:{{ support_email }}">{{ support_email }}</a></p>
+</div>
+
+<p>Thank you for being part of the NCLEX Virtual School community!</p>
+
+<p>Best regards,<br>The NCLEX Virtual School Team</p>
+
+<hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+
+<div class="footer-note" style="font-size: 12px; color: #666; text-align: center;">
+    <p>This email was sent because your course review was approved on NCLEX Virtual School.</p>
+    <p>Visit your <a href="{{ dashboard_url }}">dashboard</a> to manage your courses and reviews.</p>
+</div>
+{% endblock %}

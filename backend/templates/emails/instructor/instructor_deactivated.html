@@ -1,0 +1,45 @@
+{% extends 'emails/base.html' %}
+
+{% block title %}Account Temporarily Deactivated - NCLEX Virtual School{% endblock %}
+
+{% block header %}Account Status Update{% endblock %}
+
+{% block content %}
+<h2>Your Instructor Account Has Been Temporarily Deactivated</h2>
+
+<p>Dear {{ instructor_name }},</p>
+
+<div class="alert">
+    <strong>Account Status:</strong> Your instructor account has been temporarily deactivated. This is a temporary measure and your account may be reactivated upon review.
+</div>
+
+{% if reason %}
+<p><strong>Reason for Deactivation:</strong> {{ reason }}</p>
+{% endif %}
+
+<h3>What This Means:</h3>
+<ul>
+    <li>Your courses are temporarily unavailable to students</li>
+    <li>You cannot create new courses or edit existing ones</li>
+    <li>Your course content and student data remain safe and preserved</li>
+    <li>Your account may be reactivated after the review process</li>
+</ul>
+
+<h3>Important Information:</h3>
+<ul>
+    <li><strong>Course Status Preserved:</strong> Your courses maintain their approval status and will be restored when your account is reactivated</li>
+    <li><strong>Data Safety:</strong> All your course materials, student progress, and earnings data are securely maintained</li>
+    <li><strong>Review Process:</strong> Our team will review your account status and notify you of any updates</li>
+</ul>
+
+<div class="alert">
+    <p><strong>Next Steps:</strong> If you believe this deactivation was made in error or if you have questions about the review process, please contact our support team immediately.</p>
+</div>
+
+<p>You can reach our support team at {{ support_email }} for any questions or clarifications regarding your account status.</p>
+
+<p>We appreciate your understanding and look forward to resolving this matter promptly.</p>
+
+<p>Best regards,<br>
+<strong>The {{ platform_name }} Team</strong></p>
+{% endblock %}

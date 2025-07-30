@@ -1,0 +1,50 @@
+<!-- emails/user/certificate_awarded.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Certificate Awarded - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>🏆 Certificate Awarded!</h2>
+
+<p>Hello {{ user.full_name }},</p>
+
+<p>Congratulations! You have been awarded a certificate for successfully completing the exam <strong>"{{ exam.title }}"</strong>.</p>
+
+<div class="alert alert-success">
+    <h3>Certificate Details:</h3>
+    <ul>
+        <li><strong>Certificate For:</strong> {{ exam.title }}</li>
+        <li><strong>Course:</strong> {{ course.title }}</li>
+        <li><strong>Certificate Number:</strong> {{ certificate.certificate_number }}</li>
+        <li><strong>Issued Date:</strong> {{ issued_at|date:"F d, Y" }}</li>
+        <li><strong>Recipient:</strong> {{ user.full_name }}</li>
+    </ul>
+</div>
+
+<h4>🎯 What This Certificate Represents:</h4>
+<ul>
+    <li>Proof of your knowledge and skills</li>
+    <li>Professional development achievement</li>
+    <li>Verification of course completion</li>
+    <li>Career advancement credential</li>
+</ul>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ download_url }}" class="button" style="margin-right: 10px;">Download Certificate</a>
+    <a href="{{ verify_url }}" class="button button-secondary">Verify Certificate</a>
+</div>
+
+<div class="alert">
+    <p><strong>Share Your Achievement!</strong></p>
+    <p>Don't forget to share your certificate on LinkedIn and other professional networks to showcase your new skills and knowledge.</p>
+</div>
+
+<div class="alert alert-info">
+    <p><strong>Certificate Verification:</strong></p>
+    <p>Your certificate can be verified using the certificate number <strong>{{ certificate.certificate_number }}</strong> on our verification page.</p>
+</div>
+
+<p>We're proud of your achievement and dedication to learning!</p>
+
+<p>Best regards,<br>The NCLEX Virtual School Team</p>
+{% endblock %}

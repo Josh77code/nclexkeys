@@ -1,0 +1,59 @@
+<!-- emails/student/course_suspended.html -->
+{% extends 'emails/base.html' %}
+
+{% block title %}Course Temporarily Unavailable - NCLEX Virtual School{% endblock %}
+
+{% block header %}Course Update{% endblock %}
+
+{% block content %}
+<h2>Important Update About Your Course</h2>
+
+<p>Dear {{ student_name }},</p>
+
+<div class="alert">
+    <strong>Temporary Unavailability:</strong> We need to inform you that your enrolled course "{{ course_title }}" is temporarily unavailable while we conduct a review.
+</div>
+
+<h3>Course Details:</h3>
+<ul>
+    <li><strong>Course:</strong> {{ course_title }}</li>
+    <li><strong>Instructor:</strong> {{ instructor_name }}</li>
+    <li><strong>Status:</strong> Temporarily Under Review</li>
+</ul>
+
+<h3>What This Means:</h3>
+<ul>
+    <li>You cannot access the course content temporarily</li>
+    <li>Your progress and completed work are safely preserved</li>
+    <li>Your enrollment remains active</li>
+    <li>No additional charges will be applied</li>
+    <li>You'll be notified immediately when it's available again</li>
+</ul>
+
+<h3>Why This Happened:</h3>
+<p>{{ suspension_reason }}</p>
+
+<div class="alert alert-success">
+    <p><strong>Your Data is Safe:</strong> All your course progress, quiz scores, completed assignments, and certificates are securely stored and will be available when the course returns.</p>
+</div>
+
+<h3>What You Can Do Now:</h3>
+<ul>
+    <li>Explore other courses in our catalog that might interest you</li>
+    <li>Continue with your other enrolled courses</li>
+    <li>Contact support if you have specific questions</li>
+</ul>
+
+<p style="text-align: center; margin: 30px 0;">
+    <a href="{{ browse_courses_url }}" class="button">Browse Other Courses</a>
+</p>
+
+<p>We sincerely apologize for any inconvenience this may cause. Our review process helps ensure that all content on {{ platform_name }} meets our high standards for quality and educational value.</p>
+
+<p>You will receive an automatic notification as soon as the course becomes available again. In the meantime, if you have any questions or concerns, please contact us at {{ support_email }}.</p>
+
+<p>Thank you for your understanding and continued trust in {{ platform_name }}.</p>
+
+<p>Best regards,<br>
+<strong>The {{ platform_name }} Team</strong></p>
+{% endblock %}

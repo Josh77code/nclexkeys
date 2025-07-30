@@ -1,0 +1,49 @@
+<!-- emails/student/instructor_reactivated.html -->
+{% extends 'emails/base.html' %}
+
+{% block title %}Your Instructor is Back - NCLEX Virtual School{% endblock %}
+
+{% block header %}Instructor Back Online!{% endblock %}
+
+{% block content %}
+<h2>Excellent News! Your Instructor is Back</h2>
+
+<p>Dear {{ student_name }},</p>
+
+<div class="alert alert-success">
+    <strong>Welcome Back!</strong> We're excited to inform you that your instructor {{ instructor_name }} {{ message }} and your courses are now accessible.
+</div>
+
+<h3>Your Available Courses ({{ courses_count }} total):</h3>
+<ul>
+{% for course in affected_courses %}
+    <li><strong>{{ course.title }}</strong> <span class="exam-pill exam-type-{{ course.course_type|lower }}">{{ course.course_type|capfirst }}</span></li>
+{% endfor %}
+</ul>
+
+<h3>What You Can Do Now:</h3>
+<ul>
+    <li>Resume your learning from where you left off</li>
+    <li>Access all course materials and resources</li>
+    <li>Continue with assignments and quizzes</li>
+    <li>Participate in course discussions</li>
+    <li>Ask questions and interact with your instructor</li>
+</ul>
+
+<p style="text-align: center; margin: 30px 0;">
+    <a href="{{ my_courses_url }}" class="button">Access My Courses</a>
+</p>
+
+<div class="alert alert-success">
+    <p><strong>Your Progress is Intact:</strong> All your course progress, completed lessons, quiz scores, and achievements have been preserved during the temporary unavailability.</p>
+</div>
+
+<p>We appreciate your patience during this time. {{ instructor_name }} is ready to continue providing you with excellent educational content and support.</p>
+
+<p>If you have any questions about your courses or need assistance, please contact us at {{ support_email }}.</p>
+
+<p>Happy learning!</p>
+
+<p>Best regards,<br>
+<strong>The {{ platform_name }} Team</strong></p>
+{% endblock %}

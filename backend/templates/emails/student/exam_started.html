@@ -1,0 +1,47 @@
+<!-- emails/user/exam_started.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Exam Started - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>📝 Exam Started Successfully</h2>
+
+<p>Hello {{ user.full_name }},</p>
+
+<p>You have successfully started the exam <strong>"{{ exam.title }}"</strong> for the course "{{ course.title }}".</p>
+
+<div class="alert alert-info">
+    <h3>Exam Details:</h3>
+    <ul>
+        <li><strong>Exam:</strong> {{ exam.title }}</li>
+        <li><strong>Course:</strong> {{ course.title }}</li>
+        <li><strong>Started At:</strong> {{ started_at|date:"F d, Y \a\t H:i" }}</li>
+        <li><strong>Attempt Number:</strong> {{ attempt.attempt_number }}</li>
+        {% if time_limit %}
+        <li><strong>Time Limit:</strong> {{ time_limit }} minutes</li>
+        {% endif %}
+        <li><strong>Total Questions:</strong> {{ exam.total_questions }}</li>
+    </ul>
+</div>
+
+<div class="alert alert-warning">
+    <h4>⚠️ Important Reminders:</h4>
+    <ul>
+        <li>Ensure you have a stable internet connection</li>
+        <li>Do not refresh the page or close the browser</li>
+        {% if time_limit %}
+        <li>Complete the exam within {{ time_limit }} minutes</li>
+        {% endif %}
+        <li>Save your answers frequently</li>
+        <li>Submit the exam when you're done</li>
+    </ul>
+</div>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ exam_url }}" class="button">Continue Exam</a>
+</div>
+
+<p>Good luck with your exam! We believe in your success.</p>
+
+<p>Best regards,<br>The NCLEX Virtual School Team</p>
+{% endblock %}

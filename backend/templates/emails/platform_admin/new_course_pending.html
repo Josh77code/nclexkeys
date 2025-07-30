@@ -1,0 +1,45 @@
+{% extends "emails/base.html" %}
+
+{% block title %}New Course Pending Approval - {{ course.title }}{% endblock %}
+
+{% block header %}📚 New Course Pending Approval{% endblock %}
+
+{% block content %}
+<h2>Hello Super Admin,</h2>
+
+<p>A new course has been submitted for approval and requires your review.</p>
+
+<div class="alert">
+    <strong>⏳ Course Awaiting Approval</strong>
+    <p>{{ instructor.full_name }} has submitted "{{ course.title }}" for platform approval.</p>
+</div>
+
+<h3>Course Details</h3>
+<ul>
+    <li><strong>Title:</strong> {{ course.title }}</li>
+    <li><strong>Instructor:</strong> {{ instructor.full_name }}</li>
+    <li><strong>Category:</strong> {{ course.get_category_display }}</li>
+    <li><strong>Price:</strong> ${{ course.price }} {{ course.currency }}</li>
+    <li><strong>Course Type:</strong> {{ course.get_course_type_display }}</li>
+    <li><strong>Submitted:</strong> {{ course.created_at|date:"F j, Y \a\t g:i A" }}</li>
+</ul>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ review_url }}" class="button" style="margin-right: 10px;">
+        Review Course
+    </a>
+    <a href="{{ instructor_profile_url }}" class="button" style="background: #6c757d;">
+        View Instructor Profile
+    </a>
+</div>
+
+<div class="alert alert-danger">
+    <strong>⏰ Action Required</strong>
+    <p>Please review and approve/reject this course within 48 hours to maintain platform standards.</p>
+</div>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>NCLEX Virtual School System</strong>
+</p>
+{% endblock %}

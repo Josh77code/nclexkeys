@@ -1,0 +1,49 @@
+<!-- emails/student/course_reactivated.html -->
+{% extends 'emails/base.html' %}
+
+{% block title %}Your Course is Available Again - NCLEX Virtual School{% endblock %}
+
+{% block header %}Course Available Again!{% endblock %}
+
+{% block content %}
+<h2>Great News! Your Course is Back Online</h2>
+
+<p>Dear {{ student_name }},</p>
+
+<div class="alert alert-success">
+    <strong>Welcome Back!</strong> We're excited to let you know that your course "{{ course_title }}" is now available again and ready for you to continue learning.
+</div>
+
+<h3>Course Details:</h3>
+<ul>
+    <li><strong>Course:</strong> {{ course_title }}</li>
+    <li><strong>Instructor:</strong> {{ instructor_name }}</li>
+    <li><span class="exam-pill exam-type-{{ course_type|lower }}">{{ course_type|capfirst }}</span></li>
+</ul>
+
+<h3>What You Can Do Now:</h3>
+<ul>
+    <li>Continue from where you left off in your course progress</li>
+    <li>Access all course materials, videos, and resources</li>
+    <li>Take quizzes and complete assignments</li>
+    <li>Participate in course discussions</li>
+    <li>Download course materials and certificates</li>
+</ul>
+
+<p style="text-align: center; margin: 30px 0;">
+    <a href="{{ continue_learning_url }}" class="button">Continue Learning</a>
+</p>
+
+<div class="alert">
+    <p><strong>Your Progress is Safe:</strong> All your previous progress, completed lessons, quiz scores, and course materials have been preserved. You can pick up exactly where you left off.</p>
+</div>
+
+<p>We apologize for any inconvenience caused by the temporary unavailability. The course underwent a review process to ensure it continues to meet our high-quality standards.</p>
+
+<p>If you have any questions about your course or need assistance accessing your materials, please don't hesitate to contact our support team at {{ support_email }}.</p>
+
+<p>Happy learning!</p>
+
+<p>Best regards,<br>
+<strong>The {{ platform_name }} Team</strong></p>
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends "emails/base.html" %}
+
+{% block title %}New Exam Created - {{ exam.title }}{% endblock %}
+
+{% block header %}New Exam Created{% endblock %}
+
+{% block content %}
+<h2>Hello {{ created_by.full_name }},</h2>
+
+<p>A new exam has been created for your course "{{ course.title }}".</p>
+
+<div class="alert alert-success">
+    <strong>📝 New Exam Alert</strong>
+    <p>You have created a new exam for your course "{{ course.title }}".</p>
+</div>
+
+<h3>Exam Details</h3>
+
+<div style="background: #f8f9ff; border-left: 4px solid #004d99; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+    <h4 style="margin-top: 0; color: #004d99;">{{ exam.title }}</h4>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Course:</strong> {{ course.title }}
+    </div>
+    
+    <div class="exam-meta">
+      <!-- Exam Type -->        
+      <p class="exam-label">
+        <strong>Exam Type:</strong>
+        <span class="exam-pill {{ type_class }}">
+          {{ exam.get_exam_type_display }}
+        </span>
+      </p>
+
+      <!-- Difficulty -->
+      <p class="exam-label">
+        <strong>Difficulty:</strong>
+        <span class="exam-pill {{ difficulty_class }}">
+          {{ exam.get_difficulty_level_display }}
+        </span>
+      </p>
+    </div>
+    
+    {% if exam.description %}
+    <div style="margin-bottom: 15px;">
+        <strong>Description:</strong><br>
+        <span style="color: #666; font-style: italic;">{{ exam.description|truncatewords:30 }}</span>
+    </div>
+    {% endif %}
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Passing Score:</strong> {{ exam.passing_score }}%
+    </div>
+    
+    {% if exam.time_limit_minutes %}
+    <div style="margin-bottom: 15px;">
+        <strong>Time Limit:</strong> {{ exam.get_duration_display }}
+    </div>
+    {% endif %}
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Max Attempts:</strong> {{ exam.max_attempts }}
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Status:</strong> 
+        {% if exam.is_published %}
+            <span style="color: #28a745; font-weight: 600;">✓ Published</span>
+        {% else %}
+            <span style="color: #ffc107; font-weight: 600;">⚠ Draft</span>
+        {% endif %}
+        {% if not exam.is_active %}
+            <span style="color: #dc3545; margin-left: 10px;">• Inactive</span>
+        {% endif %}
+    </div>
+    
+    <div style="margin-bottom: 0;">
+        <strong>Created:</strong> {{ exam.created_at|date:"F j, Y \a\t g:i A" }}
+    </div>
+</div>
+
+<h3>Exam Settings</h3>
+<ul>
+    <li><strong>Required Course Progress:</strong> {{ exam.required_course_progress }}%</li>
+    {% if exam.shuffle_questions %}
+    <li>Questions will be shuffled for each attempt</li>
+    {% endif %}
+    {% if exam.shuffle_answers %}
+    <li>Answer choices will be shuffled</li>
+    {% endif %}
+    {% if exam.show_results_immediately %}
+    <li>Results shown immediately after completion</li>
+    {% else %}
+    <li>Results will be reviewed before showing to students</li>
+    {% endif %}
+    {% if exam.show_correct_answers %}
+    <li>Correct answers will be shown to students</li>
+    {% endif %}
+    {% if exam.allow_review %}
+    <li>Students can review their answers</li>
+    {% endif %}
+</ul>
+
+{% if exam.available_from or exam.available_until %}
+<h3>Availability</h3>
+<ul>
+    {% if exam.available_from %}
+    <li><strong>Available From:</strong> {{ exam.available_from|date:"F j, Y \a\t g:i A" }}</li>
+    {% endif %}
+    {% if exam.available_until %}
+    <li><strong>Available Until:</strong> {{ exam.available_until|date:"F j, Y \a\t g:i A" }}</li>
+    {% endif %}
+</ul>
+{% endif %}
+
+{% if exam.prerequisite_exams.exists %}
+<h3>Prerequisites</h3>
+<p>Students must complete the following exams before taking this exam:</p>
+<ul>
+    {% for prereq in exam.prerequisite_exams.all %}
+    <li>{{ prereq.title }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if not exam.is_published %}
+<div class="alert">
+    <strong>⚠ Action Required</strong>
+    <p>This exam is currently in draft mode. Remember to:</p>
+    <ul>
+        <li>Add questions to the exam</li>
+        <li>Review all exam settings</li>
+        <li>Publish the exam when ready for students</li>
+    </ul>
+</div>
+{% endif %}
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ exam_url }}" class="button" style="background: linear-gradient(135deg, #004d99 0%, #0066cc 100%);">
+        View & Manage Exam
+    </a>
+</div>
+
+<h3>Next Steps</h3>
+<p>You can now:</p>
+<ul>
+    <li>Add questions to the exam</li>
+    <li>Review and modify exam settings</li>
+    <li>Test the exam functionality</li>
+    <li>Publish the exam for students when ready</li>
+    <li>Monitor exam attempts and performance</li>
+</ul>
+
+<p>If you have any questions about this exam or need assistance, please contact the system administrator.</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>NCLEX Virtual School System</strong>
+</p>
+{% endblock %}

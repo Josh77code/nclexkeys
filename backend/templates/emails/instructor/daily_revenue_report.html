@@ -1,0 +1,61 @@
+<!-- emails/admin/daily_revenue_report.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Daily Revenue Report - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>📊 Daily Revenue Report</h2>
+
+<p>Hello Instructor,</p>
+
+<p>Here's your daily revenue and enrollment summary for {{ report_date|date:"F d, Y" }}.</p>
+
+<div class="alert alert-success">
+    <h3>Revenue Summary:</h3>
+    <ul>
+        <li><strong>Today's Revenue:</strong> ${{ daily_revenue }} {{ currency }}</li>
+        <li><strong>Monthly Revenue:</strong> ${{ monthly_revenue }} {{ currency }}</li>
+        <li><strong>Total Revenue:</strong> ${{ total_revenue }} {{ currency }}</li>
+        <li><strong>Average Order Value:</strong> ${{ avg_order_value }} {{ currency }}</li>
+    </ul>
+</div>
+
+<h3>Enrollment Statistics:</h3>
+<ul>
+    <li><strong>New Enrollments Today:</strong> {{ daily_enrollments }}</li>
+    <li><strong>Paid Enrollments:</strong> {{ paid_enrollments }}</li>
+    <li><strong>Free Enrollments:</strong> {{ free_enrollments }}</li>
+    <li><strong>Completion Rate:</strong> {{ completion_rate }}%</li>
+</ul>
+
+<h3>Top Performing Courses:</h3>
+{% if top_courses %}
+<ul>
+    {% for course in top_courses %}
+    <li><strong>{{ course.title }}:</strong> {{ course.enrollments }} enrollments, ${{ course.revenue }} revenue</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No course data available for today.</p>
+{% endif %}
+
+<h3>Payment Status Breakdown:</h3>
+<ul>
+    <li><strong>Completed Payments:</strong> {{ completed_payments }}</li>
+    <li><strong>Pending Payments:</strong> {{ pending_payments }}</li>
+    <li><strong>Failed Payments:</strong> {{ failed_payments }}</li>
+</ul>
+
+{% if failed_payments > 0 %}
+<div class="alert alert-danger">
+    <p><strong>Attention Required:</strong></p>
+    <p>There are {{ failed_payments }} failed payments that may need investigation. Please review the payment logs for more details.</p>
+</div>
+{% endif %}
+
+<a href="{{ dashboard_url }}" class="button">View Full Dashboard</a>
+
+<p>This report was automatically generated. For detailed analytics, please visit the admin dashboard.</p>
+
+<p>Best regards,<br>NCLEX Virtual School System</p>
+{% endblock %}

@@ -1,0 +1,62 @@
+<!-- emails/instructor/free_enrollment.html -->
+{% extends "emails/base.html" %}
+
+{% block title %}New Free Enrollment - {{ course.title }}{% endblock %}
+
+{% block header %}📚 New Student Joined!{% endblock %}
+
+{% block content %}
+<h2>Hello {{ instructor.first_name|default:"Instructor" }},</h2>
+
+<p>Great news! A new student has enrolled in your free course.</p>
+
+<div class="alert">
+    <strong>📚 Free Course Enrollment</strong>
+    <p>{{ student.full_name }} just joined your course!</p>
+</div>
+
+<h3>Course Details</h3>
+<div style="background: #e8f4fd; border-left: 4px solid #007bff; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+    <h4 style="margin-top: 0; color: #007bff;">{{ course.title }}</h4>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>New Student:</strong> {{ student.full_name }}
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Student Email:</strong> {{ student.email }}
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Total Students:</strong> {{ student_count }}
+    </div>
+    
+    <div style="margin-bottom: 0;">
+        <strong>Joined:</strong> {{ enrollment.enrolled_at|date:"F j, Y \a\t g:i A" }}
+    </div>
+</div>
+
+<h3>Why This Matters</h3>
+<ul>
+    <li>Free courses help build your audience and reputation</li>
+    <li>Students often upgrade to paid courses after positive experiences</li>
+    <li>More students mean more reviews and social proof</li>
+    <li>Free courses can lead to word-of-mouth marketing</li>
+</ul>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ course_url }}" class="button">View Course Dashboard</a>
+</div>
+
+<div class="alert">
+    <strong>💡 Engagement Tip</strong>
+    <p>Consider sending a welcome message to new students in free courses - it increases completion rates by 40%!</p>
+</div>
+
+<p>Keep building your teaching community!</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>NCLEX Virtual School Team</strong>
+</p>
+{% endblock %}

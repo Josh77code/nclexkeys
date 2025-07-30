@@ -1,0 +1,85 @@
+{% extends "emails/base.html" %}
+
+{% block title %}High-Value Sale - ${{ enrollment.amount_paid }}{% endblock %}
+
+{% block header %}🎉 High-Value Sale Alert!{% endblock %}
+
+{% block content %}
+<h2>Hello {{ instructor.first_name|default:"Instructor" }},</h2>
+
+<p>Fantastic news! You've just made a high-value sale on your course.</p>
+
+<div class="alert alert-success">
+    <strong>💰 High-Value Sale - ${{ enrollment.amount_paid }}</strong>
+    <p>A student has enrolled in your course for ${{ enrollment.amount_paid }}!</p>
+</div>
+
+<h3>Sale Details</h3>
+
+<div style="background: #e8f5e9; border-left: 4px solid #28a745; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+    <h4 style="margin-top: 0; color: #28a745;">{{ course.title }}</h4>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Student:</strong> {{ buyer.full_name }}
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Amount Paid:</strong> ${{ enrollment.amount_paid }} {{ enrollment.currency }}
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Your Earnings (70%):</strong> 
+        <span style="color: #28a745; font-weight: 600; font-size: 18px;">
+            ${{ instructor_earnings }}
+        </span>
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Payment Method:</strong> {{ enrollment.payment_method|title }}
+    </div>
+    
+    <div style="margin-bottom: 0;">
+        <strong>Enrollment Date:</strong> {{ enrollment.enrolled_at|date:"F j, Y \a\t g:i A" }}
+    </div>
+</div>
+
+<h3>Student Information</h3>
+<ul>
+    <li><strong>Name:</strong> {{ buyer.full_name }}</li>
+    <li><strong>Email:</strong> {{ buyer.email }}</li>
+    <li><strong>Member Since:</strong> {{ buyer.created_at|date:"F Y" }}</li>
+</ul>
+
+<h3>Recommended Actions</h3>
+<ul>
+    <li>Send a personalized welcome message to the student</li>
+    <li>Monitor their progress and provide additional support</li>
+    <li>Consider reaching out for feedback</li>
+    <li>Promote this course's success on social media</li>
+</ul>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ course_url }}" class="button" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+        View Course Analytics
+    </a>
+</div>
+
+<div class="alert alert-success">
+    <strong>💡 Pro Tip</strong>
+    <p>High-value sales like this indicate strong market demand for your content. Consider creating related courses or advanced levels!</p>
+</div>
+
+<h3>Payment Information</h3>
+<ul>
+    <li>Your earnings will be included in your next monthly payout</li>
+    <li>Track all earnings in your instructor dashboard</li>
+    <li>Payouts are processed on the 15th of each month</li>
+</ul>
+
+<p>Keep up the excellent work creating valuable content for our learning community!</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>NCLEX Virtual School Team</strong>
+</p>
+{% endblock %}

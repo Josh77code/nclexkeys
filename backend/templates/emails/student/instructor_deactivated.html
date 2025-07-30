@@ -1,0 +1,57 @@
+<!-- emails/student/instructor_deactivated.html -->
+{% extends 'emails/base.html' %}
+
+{% block title %}Course Update - NCLEX Virtual School{% endblock %}
+
+{% block header %}Course Status Update{% endblock %}
+
+{% block content %}
+<h2>Important Update About Your Courses</h2>
+
+<p>Dear {{ student_name }},</p>
+
+<div class="alert">
+    <strong>Temporary Update:</strong> We need to inform you that your instructor {{ instructor_name }} {{ message }}. This temporarily affects some of your enrolled courses.
+</div>
+
+<h3>Affected Courses ({{ courses_count }} total):</h3>
+<ul>
+{% for course in affected_courses %}
+    <li><strong>{{ course.title }}</strong> <span class="exam-pill exam-type-{{ course.course_type|lower }}">{{ course.course_type|capfirst }}</span></li>
+{% endfor %}
+</ul>
+
+<h3>What This Means:</h3>
+<ul>
+    <li>These courses are temporarily unavailable</li>
+    <li>Your progress and enrollment remain active and safe</li>
+    <li>No additional charges will apply</li>
+    <li>You'll be notified when courses become available again</li>
+    <li>The instructor may return after a review process</li>
+</ul>
+
+<div class="alert alert-success">
+    <p><strong>Your Learning Data is Protected:</strong> All your progress, quiz scores, assignments, and certificates are securely stored and will be restored when courses become available.</p>
+</div>
+
+<h3>What You Can Do:</h3>
+<ul>
+    <li>Continue with any other courses you're enrolled in</li>
+    <li>Explore new courses that match your interests</li>
+    <li>Use this time for additional study or practice</li>
+    <li>Contact support if you have questions</li>
+</ul>
+
+<p style="text-align: center; margin: 30px 0;">
+    <a href="{{ browse_courses_url }}" class="button">Explore Other Courses</a>
+</p>
+
+<p>We understand this temporary change may be inconvenient, and we sincerely apologize. Our priority is maintaining high-quality educational experiences for all students.</p>
+
+<p>You will receive immediate notification when your courses become available again. If you have questions or need assistance finding alternative learning resources, please contact us at {{ support_email }}.</p>
+
+<p>Thank you for your understanding and continued trust in {{ platform_name }}.</p>
+
+<p>Best regards,<br>
+<strong>The {{ platform_name }} Team</strong></p>
+{% endblock %}

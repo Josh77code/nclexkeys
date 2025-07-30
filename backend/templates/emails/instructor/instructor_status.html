@@ -1,0 +1,82 @@
+<!-- emails/instructor/instructor_status.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Account Status Update - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>👤 Your Account Status Has Changed</h2>
+
+<p>Hello {{ instructor.full_name }},</p>
+
+{% if action == 'activate' %}
+<p>🎉 Great news! Your instructor account has been <strong>activated</strong>!</p>
+
+<div class="alert alert-success">
+    <h3>Account Details:</h3>
+    <ul>
+        <li><strong>Status:</strong> Active</li>
+        <li><strong>Action Date:</strong> {{ instructor.last_login|date:"F d, Y g:i A" }}</li>
+        <li><strong>Reason:</strong> {{ reason|default:"Account review completed successfully" }}</li>
+    </ul>
+</div>
+
+<p>You can now create and publish courses on our platform. Welcome to the NCLEX Virtual School instructor community!</p>
+
+<h3>🚀 Getting Started:</h3>
+<ul>
+    <li>Create your first course</li>
+    <li>Set up your instructor profile</li>
+    <li>Review our instructor guidelines</li>
+    <li>Join our instructor community forum</li>
+</ul>
+
+{% elif action == 'deactivate' %}
+<p>⚠️ Your instructor account has been <strong>deactivated</strong>.</p>
+
+<div class="alert alert-warning">
+    <h3>Account Details:</h3>
+    <ul>
+        <li><strong>Status:</strong> Deactivated</li>
+        <li><strong>Action Date:</strong> {{ instructor.date_joined|date:"F d, Y g:i A" }}</li>
+        <li><strong>Reason:</strong> {{ reason }}</li>
+    </ul>
+</div>
+
+<p>Your courses are no longer visible to new students, but existing students retain access to their enrolled courses.</p>
+
+{% elif action == 'suspende' %}
+<p>🚨 Your instructor account has been <strong>suspended</strong>.</p>
+
+<div class="alert alert-danger">
+    <h3>Account Details:</h3>
+    <ul>
+        <li><strong>Status:</strong> Suspended</li>
+        <li><strong>Action Date:</strong> {{ instructor.date_joined|date:"F d, Y g:i A" }}</li>
+        <li><strong>Reason:</strong> {{ reason }}</li>
+    </ul>
+</div>
+
+<p>During suspension, your courses are not visible to students and you cannot create new content.</p>
+
+<h3>📞 Next Steps:</h3>
+<ul>
+    <li>Review our community guidelines</li>
+    <li>Contact support to discuss reinstatement</li>
+    <li>Address the issues mentioned above</li>
+    <li>Submit an appeal if you believe this is an error</li>
+</ul>
+
+{% endif %}
+
+<div class="button-group">
+    {% if action == 'activate' %}
+    <a href="{{ dashboard_url }}" class="button">Go to Dashboard</a>
+    {% else %}
+    <a href="{{ support_url }}" class="button">Contact Support</a>
+    {% endif %}
+</div>
+
+<p>If you have questions about this decision, please don't hesitate to contact our support team.</p>
+
+<p>Best regards,<br>The NCLEX Virtual School Team</p>
+{% endblock %}

@@ -1,0 +1,63 @@
+<!-- emails/instructor/monthly_earnings_summary.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Monthly Earnings Summary - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>📊 Your Monthly Earnings Report</h2>
+
+<p>Hello {{ instructor.full_name }},</p>
+
+<p>Here's your earnings summary for <strong>{{ month_year }}</strong>. You're doing great!</p>
+
+<div class="alert alert-success">
+    <h3>Monthly Performance:</h3>
+    <ul>
+        <li><strong>Total Sales:</strong> {{ total_sales }} enrollments</li>
+        <li><strong>Total Revenue Generated:</strong> ₦{{ total_revenue|floatformat:2 }}</li>
+        <li><strong>Your Earnings (70%):</strong> ₦{{ instructor_earnings|floatformat:2 }}</li>
+        <li><strong>Platform Fee (30%):</strong> ₦{{ platform_fee|floatformat:2 }}</li>
+        <li><strong>New Students:</strong> {{ new_students }}</li>
+    </ul>
+</div>
+
+<h3>🏆 Top Performing Courses:</h3>
+{% if top_courses %}
+<div class="course-list">
+    {% for course in top_courses %}
+    <div class="course-item">
+        <h4>{{ course.title }}</h4>
+        <ul>
+            <li><strong>Sales:</strong> {{ course.sales_count }}</li>
+            <li><strong>Revenue:</strong> ₦{{ course.revenue|floatformat:2 }}</li>
+            <li><strong>Your Share:</strong> ₦{{ course.instructor_share|floatformat:2 }}</li>
+        </ul>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p>No sales data available for this month.</p>
+{% endif %}
+
+<div class="alert alert-info">
+    <h3>💡 Performance Tips:</h3>
+    <ul>
+        <li>Your best-selling course this month was: <strong>{{ top_courses.0.title }}</strong></li>
+        <li>Consider creating similar content to replicate this success</li>
+        <li>Engage with students who leave reviews to build relationships</li>
+        <li>Update course content regularly to keep it fresh and relevant</li>
+    </ul>
+</div>
+
+<h3>💰 Next Payout:</h3>
+<p>Your earnings for this month will be included in next month's payout, processed on the 5th.</p>
+
+<div class="button-group">
+    <a href="{{ earnings_url }}" class="button">View Detailed Earnings</a>
+    <a href="{{ dashboard_url }}" class="button">Create New Course</a>
+</div>
+
+<p>Keep up the excellent work!</p>
+
+<p>Best regards,<br>The NCLEX Virtual School Team</p>
+{% endblock %}

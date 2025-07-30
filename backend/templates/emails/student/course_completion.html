@@ -1,0 +1,45 @@
+<!-- emails/user/course_completion.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Course Completion - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>🎉 Congratulations on Completing Your Course!</h2>
+
+<p>Hello {{ user.full_name }},</p>
+
+<p>We're thrilled to inform you that you have successfully completed the course <strong>"{{ course.title }}"</strong>!</p>
+
+<div class="alert alert-success">
+    <h3>Achievement Details:</h3>
+    <ul>
+        <li><strong>Course:</strong> {{ course.title }}</li>
+        <li><strong>Category:</strong> {{ course.get_category_display }}</li>
+        <li><strong>Completion Date:</strong> {{ completion_date|date:"F d, Y \a\t H:i" }}</li>
+        <li><strong>Final Progress:</strong> 100%</li>
+    </ul>
+</div>
+
+<h4>What's Next?</h4>
+<ul>
+    <li>Download your completion certificate</li>
+    <li>Share your achievement on social media</li>
+    <li>Explore related courses to continue learning</li>
+    <li>Take the final exam if available</li>
+    <li>Leave a review to help other students</li>
+</ul>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ certificate_url }}" class="button" style="margin-right: 10px;">Download Certificate</a>
+    <a href="{{ dashboard_url }}" class="button button-secondary">View Dashboard</a>
+</div>
+
+<div class="alert">
+    <p><strong>Keep Learning!</strong></p>
+    <p>Check out our other courses to continue your professional development journey. We have many more courses that might interest you.</p>
+</div>
+
+<p>We're proud of your dedication and hard work. Keep up the excellent work!</p>
+
+<p>Best regards,<br>The NCLEX Virtual School Team</p>
+{% endblock %}

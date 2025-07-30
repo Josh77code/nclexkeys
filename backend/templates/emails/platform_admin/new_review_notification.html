@@ -1,0 +1,36 @@
+<!-- emails/platform_admin/new_review_notification.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}New Course Review - NCLEX Virtual School Admin{% endblock %}
+
+{% block content %}
+<h2>📝 New Course Review Submitted</h2>
+
+<p>A new course review has been submitted and is awaiting approval.</p>
+
+<div class="alert alert-info">
+    <h3>Review Details:</h3>
+    <ul>
+        <li><strong>Course:</strong> {{ course.title }}</li>
+        <li><strong>Reviewer:</strong> {{ user.full_name }} ({{ user.email }})</li>
+        <li><strong>Rating:</strong> {{ review.rating }}/5 stars</li>
+        <li><strong>Submitted:</strong> {{ review.created_at|date:"F d, Y \a\t H:i" }}</li>
+    </ul>
+</div>
+
+<h4>Review Content:</h4>
+<div style="background: #f8f9fa; padding: 15px; border-left: 4px solid #007bff; margin: 20px 0;">
+    <p><strong>Title:</strong> {{ review.title }}</p>
+    <p><strong>Review:</strong></p>
+    <p>{{ review.review_text|linebreaks }}</p>
+</div>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ admin_url }}" class="button" style="margin-right: 10px;">Review & Approve</a>
+    <a href="{{ course_url }}" class="button button-secondary">View Course</a>
+</div>
+
+<p>Please review and approve/reject this review in the admin panel.</p>
+
+<p>Best regards,<br>NCLEX Virtual School System</p>
+{% endblock %}

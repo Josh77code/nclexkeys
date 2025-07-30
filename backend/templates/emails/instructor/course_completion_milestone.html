@@ -1,0 +1,77 @@
+<!-- emails/instructor/course_completion_milestone.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Course Completion Milestone - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>🎯 Course Completion Milestone Reached!</h2>
+
+<p>Hello Instructor,</p>
+
+<p>Great news! The course <strong>"{{ course.title }}"</strong> has reached a significant completion milestone.</p>
+
+<div class="alert alert-success">
+    <h3>Milestone Details:</h3>
+    <ul>
+        <li><strong>Course:</strong> {{ course.title }}</li>
+        <li><strong>Total Enrollments:</strong> {{ total_enrollments }}</li>
+        <li><strong>Completed Students:</strong> {{ completed_students }}</li>
+        <li><strong>Completion Rate:</strong> {{ completion_rate }}%</li>
+        <li><strong>Milestone:</strong> {{ milestone_type }}</li>
+    </ul>
+</div>
+
+<h4>Course Performance:</h4>
+<ul>
+    <li><strong>Average Rating:</strong> {{ average_rating }}/5 stars</li>
+    <li><strong>Total Reviews:</strong> {{ total_reviews }}</li>
+    <li><strong>Revenue Generated:</strong> ${{ total_revenue }} {{ course.currency }}</li>
+    <li><strong>Active Since:</strong> {{ course.created_at|date:"F d, Y" }}</li>
+</ul>
+
+<h4>Student Feedback Highlights:</h4>
+{% if recent_reviews %}
+<ul>
+    {% for review in recent_reviews %}
+    <li><strong>{{ review.rating }}★</strong> - "{{ review.review_text|truncatewords:20 }}" - {{ review.user_name }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No recent reviews available.</p>
+{% endif %}
+
+<div class="alert">
+    <p><strong>Suggested Actions:</strong></p>
+    <ul>
+        <li>Celebrate this achievement with the course creator</li>
+        <li>Consider featuring this course prominently</li>
+        <li>Use success metrics for marketing materials</li>
+        <li>Analyze what made this course successful</li>
+        <li>Apply insights to other courses</li>
+    </ul>
+</div>
+
+<a href="{{ course_url }}" class="button">View Course Analytics</a>
+
+<p>This milestone reflects the quality of content and student engagement. Congratulations to everyone involved!</p>
+
+<p>Best regards,<br>NCLEX Virtual School System</p>
+{% endblock %}>Description:</h4>
+<p>{{ course.description|truncatewords:50 }}</p>
+
+<div class="alert alert-success">
+    <p><strong>Actions Available:</strong></p>
+    <ul>
+        <li>Review and edit course details</li>
+        <li>Activate/deactivate the course</li>
+        <li>Set featured status</li>
+        <li>Monitor enrollments</li>
+    </ul>
+</div>
+
+<a href="{{ course_url }}" class="button">View Course Details</a>
+
+<p>You can also access the <a href="{{ admin_dashboard_url }}">Admin Dashboard</a> to manage all courses.</p>
+
+<p>Best regards,<br>NCLEX Virtual School System</p>
+{% endblock %}

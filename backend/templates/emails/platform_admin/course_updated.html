@@ -1,0 +1,58 @@
+{% extends "emails/base.html" %}
+
+{% block header %}Course Updated - Platform Admin{% endblock %}
+
+{% block content %}
+<h2>Course Updated - Platform Review Required</h2>
+
+<p>Hello Platform Administrator,</p>
+
+<p>A significant course update has been made to <strong>"{{ course.title }}"</strong> by instructor <strong>{{ updated_by.full_name }}</strong>.</p>
+
+<div class="alert alert-success">
+    <p><strong>Instructor Details:</strong></p>
+    <ul>
+        <li><strong>Name:</strong> {{ updated_by.full_name }}</li>
+        <li><strong>Email:</strong> {{ updated_by.email }}</li>
+        <li><strong>Role:</strong> {{ updated_by.get_role_display }}</li>
+    </ul>
+</div>
+
+<h3>Significant Changes Made:</h3>
+{% if changes %}
+<ul>
+    {% for change in changes %}
+    <li>
+        <strong>{{ change.field|title }}:</strong> 
+        <span style="color: #d32f2f;">{{ change.old_value }}</span> → 
+        <span style="color: #388e3c;">{{ change.new_value }}</span>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>Course updates were made that require platform review.</p>
+{% endif %}
+
+<div class="alert">
+    <p><strong>Current Course Status:</strong></p>
+    <ul>
+        <li><strong>Category:</strong> {{ course.get_category_display }}</li>
+        <li><strong>Course Type:</strong> {{ course.get_course_type_display }}</li>
+        <li><strong>Price:</strong> {{ course.currency }} {{ course.price }}</li>
+        <li><strong>Status:</strong> {{ course.is_active|yesno:"Active,Inactive" }}</li>
+        <li><strong>Featured:</strong> {{ course.is_featured|yesno:"Yes,No" }}</li>
+        <li><strong>Total Enrollments:</strong> {{ course.user_progress.count }}</li>
+    </ul>
+</div>
+
+<div class="alert alert-danger">
+    <p><strong>Platform Review Required</strong></p>
+    <p>This update involves significant changes that may affect revenue, pricing, or course positioning. Please review these changes to ensure they align with platform policies.</p>
+</div>
+
+<a href="{{ course_url }}" class="button">Review Course Changes</a>
+
+<p>If you have any concerns about these changes, please contact the instructor directly or take appropriate administrative action.</p>
+
+<p>Best regards,<br>NCLEX Virtual School Platform System</p>
+{% endblock %}

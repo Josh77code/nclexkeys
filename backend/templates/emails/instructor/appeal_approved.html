@@ -1,0 +1,57 @@
+<!-- emails/instructor/appeal_approved.html -->
+{% extends 'emails/base.html' %}
+
+{% block title %}Appeal Approved - NCLEX Virtual School{% endblock %}
+
+{% block header %}Appeal Approved!{% endblock %}
+
+{% block content %}
+<h2>Your Course Appeal Has Been Approved</h2>
+
+<p>Dear {{ instructor_name }},</p>
+
+<div class="alert alert-success">
+    <strong>Excellent News!</strong> Your appeal for "{{ course_title }}" has been approved and your course has been reactivated.
+</div>
+
+<h3>Appeal Decision Details:</h3>
+<ul>
+    <li><strong>Course:</strong> {{ course_title }}</li>
+    <li><strong>Decision:</strong> <span style="color: #28a745; font-weight: bold;">APPROVED</span></li>
+    <li><strong>Reviewed by:</strong> {{ reviewed_by }}</li>
+    <li><strong>Decision Date:</strong> {{ reviewed_at|date:"F d, Y \a\t g:i A" }}</li>
+</ul>
+
+<h3>Review Notes:</h3>
+<div style="background-color: #d4edda; padding: 15px; border-radius: 6px; margin: 15px 0; border-left: 4px solid #28a745;">
+    <p style="margin: 0;">"{{ review_notes }}"</p>
+</div>
+
+<h3>What This Means:</h3>
+<ul>
+    <li>Your course is now active and available to students</li>
+    <li>Students can enroll and access course content immediately</li>
+    <li>Your course appears in search and browse results</li>
+    <li>You can manage and update your course content</li>
+    <li>Revenue tracking is active for new enrollments</li>
+</ul>
+
+<p style="text-align: center; margin: 30px 0;">
+    <a href="{{ course_url }}" class="button">View Your Course</a>
+</p>
+
+<h3>Next Steps:</h3>
+<ol>
+    <li>Review your course content to ensure it's current</li>
+    <li>Check your course pricing and availability settings</li>
+    <li>Consider posting an announcement to welcome students back</li>
+    <li>Monitor student feedback and engagement</li>
+</ol>
+
+<p>Your enrolled students have been automatically notified that the course is available again. We expect enrollment activity to resume shortly.</p>
+
+<p>Thank you for working with us to maintain high-quality content on {{ platform_name }}.</p>
+
+<p>Best regards,<br>
+<strong>The {{ platform_name }} Team</strong></p>
+{% endblock %}

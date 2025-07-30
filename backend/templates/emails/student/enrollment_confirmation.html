@@ -1,0 +1,53 @@
+<!-- emails/user/enrollment_confirmation.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Course Enrollment Confirmation - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>🎉 Welcome to Your New Course!</h2>
+
+<p>Hello {{ user.full_name }},</p>
+
+<p>Congratulations! You have been successfully enrolled in the course <strong>"{{ course.title }}"</strong>.</p>
+
+<div class="alert alert-success">
+    <h3>Enrollment Details:</h3>
+    <ul>
+        <li><strong>Course:</strong> {{ course.title }}</li>
+        <li><strong>Category:</strong> {{ course.get_category_display }}</li>
+        <li><strong>Difficulty Level:</strong> {{ course.get_difficulty_level_display }}</li>
+        {% if course.duration_minutes %}
+        <li><strong>Duration:</strong> {{ course.duration_minutes }} minutes</li>
+        {% endif %}
+        <li><strong>Enrollment Date:</strong> {{ enrollment.enrolled_at|date:"F d, Y \a\t H:i" }}</li>
+        {% if enrollment.amount_paid and enrollment.amount_paid > 0 %}
+        <li><strong>Amount Paid:</strong> ${{ enrollment.amount_paid }} {{ enrollment.currency }}</li>
+        {% else %}
+        <li><strong>Course Type:</strong> Free Course</li>
+        {% endif %}
+    </ul>
+</div>
+
+<h4>Course Description:</h4>
+<p>{{ course.description }}</p>
+
+<h4>What's Next?</h4>
+<ul>
+    <li>Access your course dashboard</li>
+    <li>Start watching the course videos</li>
+    <li>Track your progress</li>
+    <li>Complete exercises and quizzes</li>
+    <li>Earn your completion certificate</li>
+</ul>
+
+<a href="{{ course_url }}" class="button">Start Learning Now</a>
+
+<div class="alert">
+    <p><strong>Need Help?</strong></p>
+    <p>If you have any questions about your course or need technical support, please don't hesitate to contact us at <a href="mailto:support@nclexvirtualschool.com">support@nclexvirtualschool.com</a></p>
+</div>
+
+<p>We're excited to have you on this learning journey. Good luck with your studies!</p>
+
+<p>Best regards,<br>The NCLEX Virtual School Team</p>
+{% endblock %}

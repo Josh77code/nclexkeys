@@ -1,0 +1,36 @@
+<!-- emails/instructor/course_created.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Course Created - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>New Course Created</h2>
+
+<p>Hello Instructor,</p>
+
+<p>A new course has been created by <strong>{{ created_by.full_name }}</strong>.</p>
+
+<h3>Course Details:</h3>
+<ul>
+    <li><strong>Title:</strong> {{ course.title }}</li>
+    <li><strong>Category:</strong> {{ course.get_category_display }}</li>
+    <li><strong>Course Type:</strong> {{ course.get_course_type_display }}</li>
+    <li><strong>Price:</strong> ${{ course.price }} {{ course.currency }}</li>
+    <li><strong>Difficulty:</strong> {{ course.get_difficulty_level_display }}</li>
+    <li><strong>Status:</strong> {{ course.is_active|yesno:"Active,Inactive" }}</li>
+</ul>
+
+<h4>Next Steps:</h4>
+<ul>
+    <li>Review the video quality and content</li>
+    <li>Update course description if needed</li>
+    <li>Set appropriate pricing and categories</li>
+    <li>Activate the course when ready</li>
+</ul>
+
+<a href="{{ course_url }}" class="button">Review Course</a>
+
+<p>Your video has been automatically optimized for the best viewing experience across all devices.</p>
+
+<p>Best regards,<br>NCLEX Virtual School System</p>
+{% endblock %}

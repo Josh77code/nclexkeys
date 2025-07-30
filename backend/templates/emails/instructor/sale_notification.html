@@ -1,0 +1,55 @@
+<!-- emails/instructor/sale_notification.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}New Course Sale - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>🎉 Congratulations! You Made a Sale!</h2>
+
+<p>Hello {{ instructor.full_name }},</p>
+
+<p>Great news! <strong>{{ student.full_name }}</strong> just purchased your course and you've earned money!</p>
+
+<div class="alert alert-success">
+    <h3>Sale Details:</h3>
+    <ul>
+        <li><strong>Course:</strong> {{ course.title }}</li>
+        <li><strong>Student:</strong> {{ student.full_name }} ({{ student.email }})</li>
+        <li><strong>Sale Amount:</strong> ₦{{ payment.amount|floatformat:2 }}</li>
+        <li><strong>Your Earnings (70%):</strong> ₦{{ instructor_earning|floatformat:2 }}</li>
+        <li><strong>Platform Fee (30%):</strong> ₦{{ platform_fee|floatformat:2 }}</li>
+        <li><strong>Sale Date:</strong> {{ payment_date|date:"F d, Y g:i A" }}</li>
+    </ul>
+</div>
+
+<div class="alert alert-info">
+    <h3>Course Performance:</h3>
+    <ul>
+        <li><strong>Total Students Enrolled:</strong> {{ student_count }}</li>
+        <li><strong>Course Rating:</strong> {{ course.average_rating|default:"Not yet rated" }}</li>
+        <li><strong>Course Category:</strong> {{ course.category }}</li>
+    </ul>
+</div>
+
+<h3>💰 Payout Information:</h3>
+<p>Your earnings will be included in your next monthly payout. Payouts are processed on the 5th of each month for the previous month's sales.</p>
+
+<div class="button-group">
+    <a href="{{ course_url }}" class="button">View Course</a>
+    <a href="{{ earnings_url }}" class="button">View Earnings</a>
+    <a href="{{ dashboard_url }}" class="button">Go to Dashboard</a>
+</div>
+
+<h3>🚀 Keep the Momentum Going!</h3>
+<p>This is fantastic! Here are some tips to get more sales:</p>
+<ul>
+    <li>Update your course content regularly</li>
+    <li>Respond to student questions quickly</li>
+    <li>Consider creating more courses in popular categories</li>
+    <li>Share your course on social media</li>
+</ul>
+
+<p>Thank you for being an amazing instructor!</p>
+
+<p>Best regards,<br>The NCLEX Virtual School Team</p>
+{% endblock %}

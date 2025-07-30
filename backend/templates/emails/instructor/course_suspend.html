@@ -1,0 +1,87 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Course Suspended - {{ course.title }}{% endblock %}
+
+{% block header %}⚠️ Course Suspended{% endblock %}
+
+{% block content %}
+<h2>Hello {{ instructor.first_name|default:"Course Creator" }},</h2>
+
+<p>We are writing to inform you that your course "{{ course.title }}" has been temporarily suspended from our platform.</p>
+
+<div class="alert alert-warning">
+    <strong>⚠️ Course Suspended</strong>
+    <p>Your course has been temporarily removed from public access while we address some concerns.</p>
+</div>
+
+<h3>Course Details</h3>
+
+<div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+    <h4 style="margin-top: 0; color: #856404;">{{ course.title }}</h4>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Status:</strong> 
+        <span style="color: #856404; font-weight: 600;">⏸ Temporarily Suspended</span>
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Suspension Date:</strong> {{ suspended_at|date:"F j, Y \\a\\t g:i A" }}
+    </div>
+    
+    {% if reason %}
+    <div style="margin-bottom: 0;">
+        <strong>Reason for Suspension:</strong>
+        <div style="background: #fff; padding: 15px; margin-top: 10px; border-radius: 4px; border-left: 3px solid #ffc107;">
+            {{ reason|linebreaks }}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<h3>What This Means</h3>
+<ul>
+    <li>Your course is temporarily hidden from students</li>
+    <li>New enrollments are paused</li>
+    <li>Existing students retain access to purchased content</li>
+    <li>Earnings from existing enrollments continue normally</li>
+</ul>
+
+<h3>Next Steps</h3>
+<ul>
+    <li>Review the suspension reason carefully</li>
+    <li>Address the identified issues promptly</li>
+    <li>Contact our support team for clarification if needed</li>
+    <li>Await further communication regarding resolution</li>
+</ul>
+
+<h3>Common Suspension Reasons</h3>
+<ul>
+    <li><strong>Policy Violations:</strong> Content that violates platform guidelines</li>
+    <li><strong>Student Complaints:</strong> Multiple reports requiring investigation</li>
+    <li><strong>Quality Issues:</strong> Significant problems affecting learning experience</li>
+    <li><strong>Copyright Concerns:</strong> Potential intellectual property issues</li>
+</ul>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ course_url }}" class="button" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);">
+        View Course Details
+    </a>
+</div>
+
+<div class="alert alert-warning">
+    <strong>⏰ Resolution Timeline</strong>
+    <p>We aim to resolve suspension cases within 5-7 business days. You'll receive updates as we investigate and work toward a resolution.</p>
+</div>
+
+<div class="alert">
+    <strong>📞 Need to Appeal or Get Help?</strong>
+    <p>If you believe this suspension was made in error or need assistance with the resolution process, please contact our support team immediately at <a href="mailto:{{ support_email }}">{{ support_email }}</a></p>
+</div>
+
+<p>We take these actions seriously and only when necessary to maintain the quality and integrity of our platform. We're committed to working with you to resolve this matter fairly and promptly.</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>NCLEX Virtual School Moderation Team</strong>
+</p>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'emails/base.html' %}
+
+{% block title %}Your Courses Have Been Reactivated - NCLEX Virtual School{% endblock %}
+
+{% block header %}Courses Reactivated{% endblock %}
+
+{% block content %}
+<h2>Your Courses Have Been Successfully Reactivated</h2>
+
+<p>Dear {{ instructor_name }},</p>
+
+<div class="alert alert-success">
+    <strong>Excellent News!</strong> Following your account activation, your approved courses have been automatically reactivated and are now available to students.
+</div>
+
+{% if reason %}
+<p><strong>Reactivation Context:</strong> {{ reason }}</p>
+{% endif %}
+
+<h3>Reactivated Courses ({{ total_courses }} total):</h3>
+<ul>
+{% for course in courses %}
+    <li><strong>{{ course.title }}</strong> - Course ID: {{ course.id }}</li>
+{% endfor %}
+{% if total_courses > 10 %}
+    <li><em>... and {{ total_courses|add:"-10" }} additional course(s)</em></li>
+{% endif %}
+</ul>
+
+<h3>What's Now Available:</h3>
+<ul>
+    <li>Students can enroll in your reactivated courses</li>
+    <li>Your courses are visible in search and browse results</li>
+    <li>You can manage and update your course content</li>
+    <li>Student progress and discussions are fully functional</li>
+    <li>Revenue tracking is active for new enrollments</li>
+</ul>
+
+{% if suspended_courses_exist %}
+<div class="alert">
+    <p><strong>Note about Suspended Courses:</strong></p>
+    <p>Some of your courses remain suspended and require individual review before they can be reactivated. You will receive separate notifications as these courses are reviewed by our moderation team.</p>
+    
+    <p><strong>Suspended Course Review Process:</strong></p>
+    <ul>
+        <li>Each suspended course will be individually evaluated</li>
+        <li>You may be contacted for additional information or clarification</li>
+        <li>Approved courses will be reactivated automatically</li>
+        <li>You'll receive email notifications about each course decision</li>
+    </ul>
+</div>
+{% endif %}
+
+<p style="text-align: center; margin: 30px 0;">
+    <a href="{{ dashboard_url }}" class="button">View Your Dashboard</a>
+</p>
+
+<h3>Next Steps:</h3>
+<ol>
+    <li>Review your course content to ensure it's current and accurate</li>
+    <li>Check your course pricing and availability settings</li>
+    <li>Respond to any pending student questions or reviews</li>
+    <li>Consider creating announcement posts to welcome back your students</li>
+</ol>
+
+<p>Your students have been notified that your courses are available again, and we expect enrollment activity to resume shortly.</p>
+
+<p>If you have any questions about your reactivated courses or need assistance with course management, please contact us at {{ support_email }}.</p>
+
+<p>Thank you for your continued participation in {{ platform_name }}. We're excited to see your courses serving students again!</p>
+
+<p>Best regards,<br>
+<strong>The {{ platform_name }} Team</strong></p>
+{% endblock %}

@@ -1,0 +1,16 @@
+# emails/instructor/instructor_activated.html
+<h2>Account Activated</h2>
+<p>Dear {{ instructor_name }},</p>
+<p>Good news! Your instructor account has been activated.</p>
+<p><strong>{{ message }}</strong></p>
+{% if reason %}
+<p><strong>Reason:</strong> {{ reason }}</p>
+{% endif %}
+<p>You can now:</p>
+<ul>
+    <li>Create new courses</li>
+    <li>Manage your existing courses</li>
+    <li>View your earnings and analytics</li>
+</ul>
+<p>If you have any questions, please contact us at {{ support_email }}</p>
+<p>Welcome back to {{ platform_name }}!</p>

@@ -1,0 +1,74 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Course Review Required - {{ course.title }}{% endblock %}
+
+{% block header %}Course Review Required{% endblock %}
+
+{% block content %}
+<h2>Hello {{ instructor.first_name|default:"Course Creator" }},</h2>
+
+<p>Thank you for submitting your course "{{ course.title }}" for review. Our content team has completed the review and identified some areas that need attention.</p>
+
+<div class="alert alert-danger">
+    <strong>⚠️ Course Requires Revision</strong>
+    <p>Your course needs some modifications before it can be approved for publication.</p>
+</div>
+
+<h3>Course Details</h3>
+
+<div style="background: #ffeaa7; border-left: 4px solid #fdcb6e; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+    <h4 style="margin-top: 0; color: #e84393;">{{ course.title }}</h4>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Status:</strong> 
+        <span style="color: #e84393; font-weight: 600;">⏸ Requires Revision</span>
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Review Date:</strong> {{ reviewed_at|date:"F j, Y \\a\\t g:i A" }}
+    </div>
+    
+    {% if reason %}
+    <div style="margin-bottom: 0;">
+        <strong>Reviewer Feedback:</strong>
+        <div style="background: #fff; padding: 15px; margin-top: 10px; border-radius: 4px; border-left: 3px solid #e84393;">
+            {{ reason|linebreaks }}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<h3>What You Need to Do</h3>
+<ul>
+    <li>Review the feedback provided above</li>
+    <li>Make the necessary corrections to your course</li>
+    <li>Resubmit your course for review</li>
+    <li>Contact support if you need clarification</li>
+</ul>
+
+<h3>Common Issues & Solutions</h3>
+<ul>
+    <li><strong>Video Quality:</strong> Ensure clear audio and video resolution</li>
+    <li><strong>Content Accuracy:</strong> Verify all information is current and correct</li>
+    <li><strong>Course Structure:</strong> Organize content in logical, easy-to-follow sections</li>
+    <li><strong>Description:</strong> Provide detailed, accurate course descriptions</li>
+</ul>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ course_url }}" class="button" style="background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);">
+        Edit Course
+    </a>
+</div>
+
+<div class="alert">
+    <strong>📞 Need Help?</strong>
+    <p>If you have questions about the feedback or need assistance with revisions, please contact our support team at <a href="mailto:{{ support_email }}">{{ support_email }}</a></p>
+</div>
+
+<p>We're here to help you create the best possible learning experience. Don't hesitate to reach out if you need guidance.</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>NCLEX Virtual School Content Team</strong>
+</p>
+{% endblock %}

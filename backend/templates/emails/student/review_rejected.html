@@ -1,0 +1,124 @@
+<!-- emails/student/review_rejected.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Review Update Required - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>📝 Review Update Required</h2>
+
+<p>Hello {{ user.full_name }},</p>
+
+<p>Thank you for taking the time to review the course <strong>"{{ course.title }}"</strong>. We've reviewed your feedback and need you to make some adjustments before we can publish it on our platform.</p>
+
+<div class="alert alert-warning">
+    <h3>Your Current Review:</h3>
+    <div class="review-content">
+        <div class="rating">
+            <strong>Rating:</strong> 
+            {% for i in "12345"|make_list %}
+                {% if forloop.counter <= review.rating %}
+                    ⭐
+                {% else %}
+                    ☆
+                {% endif %}
+            {% endfor %}
+            ({{ review.rating }}/5)
+        </div>
+        <div class="review-text">
+            <strong>Your Review:</strong>
+            <blockquote style="background: #f8f9fa; padding: 15px; border-left: 4px solid #ffc107; margin: 10px 0;">
+                {{ review.review_text|default:"No written review provided." }}
+            </blockquote>
+        </div>
+        <div class="review-meta">
+            <small><strong>Submitted:</strong> {{ review.created_at|date:"F d, Y \a\t H:i" }}</small>
+        </div>
+    </div>
+</div>
+
+{% if rejection_reason %}
+<div class="alert alert-info">
+    <h4>🔍 What Needs to be Updated:</h4>
+    <p><strong>{{ rejection_reason }}</strong></p>
+</div>
+{% endif %}
+
+<div class="course-info">
+    <h4>Course Details:</h4>
+    <ul>
+        <li><strong>Course:</strong> {{ course.title }}</li>
+        <li><strong>Category:</strong> {{ course.get_category_display }}</li>
+        <li><strong>Difficulty:</strong> {{ course.get_difficulty_level_display }}</li>
+    </ul>
+</div>
+
+<h4>📋 Review Guidelines Reminder</h4>
+<p>To help maintain a helpful and respectful community, please ensure your review:</p>
+<ul>
+    <li>✅ Focuses on the course content and learning experience</li>
+    <li>✅ Uses respectful and constructive language</li>
+    <li>✅ Provides specific, helpful feedback for other students</li>
+    <li>✅ Is based on your actual experience with the course</li>
+    <li>❌ Doesn't contain inappropriate language or personal attacks</li>
+    <li>❌ Doesn't include spam, promotional content, or irrelevant information</li>
+    <li>❌ Doesn't violate our community standards</li>
+</ul>
+
+<div class="actions" style="text-align: center; margin: 30px 0;">
+    <a href="{{ resubmit_url }}" class="button" style="background: #28a745; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 0 10px;">Update My Review</a>
+    <a href="{{ review_guidelines_url }}" class="button-secondary" style="background: #6c757d; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; margin: 0 10px;">Review Guidelines</a>
+</div>
+
+<div class="alert">
+    <h4>💡 Tips for a Great Review:</h4>
+    <ul>
+        <li><strong>Be Specific:</strong> Mention particular aspects that helped or didn't help you learn</li>
+        <li><strong>Be Balanced:</strong> Include both positive aspects and areas for improvement</li>
+        <li><strong>Be Helpful:</strong> Think about what other students would want to know</li>
+        <li><strong>Be Honest:</strong> Share your genuine experience and outcomes</li>
+    </ul>
+</div>
+
+<div class="examples">
+    <h4>✅ Examples of Helpful Reviews:</h4>
+    <div style="background: #d4edda; padding: 15px; border-radius: 5px; margin: 10px 0;">
+        <p><em>"The video explanations were clear and the practice questions really helped me understand the concepts. I would have liked more case studies, but overall it prepared me well for my exam."</em></p>
+    </div>
+    <div style="background: #d4edda; padding: 15px; border-radius: 5px; margin: 10px 0;">
+        <p><em>"Great course structure with step-by-step progression. The instructor's teaching style worked well for me, especially the visual diagrams. Completed it in 3 weeks and saw improvement in my practice scores."</em></p>
+    </div>
+</div>
+
+<div class="alert">
+    <h4>🎯 Your Review Matters!</h4>
+    <p>Quality reviews help other students choose the right courses and help instructors improve their content. We appreciate you taking the time to share thoughtful feedback.</p>
+</div>
+
+<div class="next-steps">
+    <h4>What Happens Next?</h4>
+    <ol>
+        <li><strong>Update Your Review:</strong> Click the button above to edit your review</li>
+        <li><strong>Resubmission:</strong> Once you submit the updated review, we'll review it again</li>
+        <li><strong>Approval:</strong> Approved reviews typically appear within 24 hours</li>
+        <li><strong>Publication:</strong> Your review will be visible to help other students</li>
+    </ol>
+</div>
+
+<div class="alert">
+    <p><strong>Need Help?</strong></p>
+    <p>If you have questions about our review guidelines or need assistance updating your review, please contact us at <a href="mailto:{{ support_email }}">{{ support_email }}</a></p>
+    <p>We're here to help you share valuable feedback with our learning community!</p>
+</div>
+
+<p>Thank you for your patience and for being part of the NCLEX Virtual School community!</p>
+
+<p>Best regards,<br>The NCLEX Virtual School Team</p>
+
+<hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+
+<div class="footer-note" style="font-size: 12px; color: #666; text-align: center;">
+    <p>This email was sent because your course review needs updates before publication.</p>
+    <p>Visit your <a href="{{ dashboard_url }}">dashboard</a> to manage your courses and reviews.</p>
+    <p>You can update your review at any time by visiting the course page.</p>
+</div>
+{% endblock %}

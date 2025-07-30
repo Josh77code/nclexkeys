@@ -1,0 +1,79 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Course Created Successfully - {{ course.title }}{% endblock %}
+
+{% block header %}Course Created Successfully{% endblock %}
+
+{% block content %}
+<h2>Hello {{ instructor.first_name|default:"Course Creator" }},</h2>
+
+<p>Congratulations! Your course has been successfully created and submitted for review.</p>
+
+<div class="alert alert-success">
+    <strong>🎉 Course Creation Successful</strong>
+    <p>Your course "{{ course.title }}" has been created and is now {{ status }}.</p>
+</div>
+
+<h3>Course Details</h3>
+
+<div style="background: #f8f9ff; border-left: 4px solid #004d99; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+    <h4 style="margin-top: 0; color: #004d99;">{{ course.title }}</h4>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Course ID:</strong> #{{ course.id }}
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Category:</strong> {{ course.get_category_display }}
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Course Type:</strong> {{ course.get_course_type_display }}
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Price:</strong> ${{ course.price }} {{ course.currency }}
+    </div>
+    
+    <div style="margin-bottom: 15px;">
+        <strong>Status:</strong> 
+        <span style="color: #ffc107; font-weight: 600;">⏳ {{ status|title }}</span>
+    </div>
+    
+    <div style="margin-bottom: 0;">
+        <strong>Created:</strong> {{ course.created_at|date:"F j, Y \a\t g:i A" }}
+    </div>
+</div>
+
+<h3>Next Steps</h3>
+<ul>
+    <li>Your course is now being reviewed by our content team</li>
+    <li>Expected review time: <strong>{{ expected_approval_time }}</strong></li>
+    <li>You'll receive an email notification once the review is complete</li>
+    <li>You can track your course status in your dashboard</li>
+</ul>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ dashboard_url }}" class="button" style="background: linear-gradient(135deg, #004d99 0%, #0066cc 100%);">
+        View Course Dashboard
+    </a>
+</div>
+
+<div class="alert">
+    <strong>📋 During Review Process</strong>
+    <p>Our team will check:</p>
+    <ul>
+        <li>Course content quality and accuracy</li>
+        <li>Video/audio clarity</li>
+        <li>Course structure and organization</li>
+        <li>Compliance with platform guidelines</li>
+    </ul>
+</div>
+
+<p>If you need to make any changes or have questions, please contact our support team.</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>NCLEX Virtual School Team</strong>
+</p>
+{% endblock %}

@@ -1,0 +1,133 @@
+<!-- emails/instructor/enrollment_notification.html (for low/medium value) -->
+{% extends "emails/base.html" %}
+
+{% block title %}
+{% if tier == 'low_value' %}
+New Enrollment - ${{ enrollment.amount_paid }}
+{% elif tier == 'medium_value' %}
+Great Sale - ${{ enrollment.amount_paid }}
+{% endif %}
+{% endblock %}
+
+{% block header %}
+{% if tier == 'low_value' %}
+💰 New Sale!
+{% elif tier == 'medium_value' %}
+🎉 Great Sale!
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<h2>Hello {{ instructor.first_name|default:"Instructor" }},</h2>
+
+<p>
+{% if tier == 'low_value' %}
+You've received a new enrollment in your course.
+{% elif tier == 'medium_value' %}
+Excellent work! You've made a solid sale on your course.
+{% endif %}
+</p>
+
+<div class="alert alert-success">
+    <strong>
+    {% if tier == 'low_value' %}
+    💰 New Enrollment - ${{ enrollment.amount_paid }}
+    {% elif tier == 'medium_value' %}
+    🎉 Great Sale - ${{ enrollment.amount_paid }}
+    {% endif %}
+    </strong>
+    <p>A student has enrolled for ${{ enrollment.amount_paid }}!</p>
+</div>
+
+<h3>Sale Details</h3>
+
+{% if tier == 'low_value' %}
+<div style="background: #e8f5e9; border-left: 4px solid #28a745; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+  <h4 style="margin-top: 0; color: #28a745;">{{ course.title }}</h4>
+{% elif tier == 'medium_value' %}
+<div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+  <h4 style="margin-top: 0; color: #ffc107;">{{ course.title }}</h4>
+{% else %}
+<div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0;">
+  <h4 style="margin-top: 0; color: #2196f3;">{{ course.title }}</h4>
+{% endif %}
+
+  <div style="margin-bottom: 15px;">
+      <strong>Student:</strong> {{ student.full_name }}
+  </div>
+
+  <div style="margin-bottom: 15px;">
+      <strong>Amount Paid:</strong> ${{ enrollment.amount_paid }} {{ enrollment.currency }}
+  </div>
+
+  <!-- Fixed earnings color logic -->
+  {% if tier == "low_value" %}
+    {% with "#28a745" as earnings_color %}
+  {% elif tier == "medium_value" %}
+    {% with "#ffc107" as earnings_color %}
+  {% elif tier == "high_value" %}
+    {% with "#2196f3" as earnings_color %}
+  {% else %}
+    {% with "#6c757d" as earnings_color %}
+  {% endif %}
+  
+    <div style="margin-bottom: 15px;">
+      <strong>Your Earnings (70%):</strong>
+      <span style="color: {{ earnings_color }}; font-weight: 600; font-size: 16px;">
+        ${{ instructor_earnings }}
+      </span>
+    </div>
+  {% endwith %}
+
+  <div style="margin-bottom: 15px;">
+      <strong>Payment Method:</strong> {{ enrollment.payment_method|title }}
+  </div>
+
+  <div style="margin-bottom: 0;">
+      <strong>Enrollment Date:</strong> {{ enrollment.enrolled_at|date:"F j, Y \a\t g:i A" }}
+  </div>
+</div>
+
+<h3>Student Information</h3>
+<ul>
+    <li><strong>Name:</strong> {{ student.full_name }}</li>
+    <li><strong>Email:</strong> {{ student.email }}</li>
+    <li><strong>Member Since:</strong> {{ student.created_at|date:"F Y" }}</li>
+</ul>
+
+<h3>Next Steps</h3>
+<ul>
+    <li>Welcome the new student to maximize engagement</li>
+    <li>Monitor their progress in the first week</li>
+    {% if tier == 'low_value' %}
+    <li>Consider upselling to higher-tier courses</li>
+    <li>Gather feedback to improve course value</li>
+    {% elif tier == 'medium_value' %}
+    <li>Provide extra support for this investment level</li>
+    <li>Ask for testimonials after completion</li>
+    {% endif %}
+</ul>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ course_url }}" class="button">View Course Analytics</a>
+</div>
+
+{% if tier == 'low_value' %}
+<div class="alert">
+    <strong>💡 Optimization Tip</strong>
+    <p>Consider creating course bundles or premium versions to increase average order value!</p>
+</div>
+{% elif tier == 'medium_value' %}
+<div class="alert">
+    <strong>🚀 Growth Tip</strong>
+    <p>Students paying $50+ are great candidates for advanced courses or one-on-one coaching!</p>
+</div>
+{% endif %}
+
+<p>Your earnings will be included in your next monthly payout on the 15th.</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>NCLEX Virtual School Team</strong>
+</p>
+{% endblock %}

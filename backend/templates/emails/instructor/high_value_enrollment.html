@@ -1,0 +1,55 @@
+<!-- emails/instructor/high_value_enrollment.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}High-Value Enrollment Alert - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>🎉 High-Value Enrollment Alert</h2>
+
+<p>Hello Instructor,</p>
+
+<p>We've received a high-value enrollment that requires your attention!</p>
+
+<div class="alert alert-success">
+    <h3>Enrollment Details:</h3>
+    <ul>
+        <li><strong>Student:</strong> {{ user.full_name }} ({{ user.email }})</li>
+        <li><strong>Course:</strong> {{ course.title }}</li>
+        <li><strong>Amount Paid:</strong> ${{ enrollment.amount_paid }} {{ enrollment.currency }}</li>
+        <li><strong>Payment Method:</strong> {{ enrollment.payment_method|title }}</li>
+        <li><strong>Enrollment Date:</strong> {{ enrollment.enrolled_at|date:"F d, Y \a\t H:i" }}</li>
+    </ul>
+</div>
+
+<h4>Student Information:</h4>
+<ul>
+    <li><strong>Full Name:</strong> {{ user.full_name }}</li>
+    <li><strong>Email:</strong> {{ user.email }}</li>
+    <li><strong>Registration Date:</strong> {{ user.created_at|date:"F d, Y" }}</li>
+    <li><strong>Total Courses:</strong> {{ user.course_progress.count }}</li>
+</ul>
+
+<h4>Course Information:</h4>
+<ul>
+    <li><strong>Title:</strong> {{ course.title }}</li>
+    <li><strong>Category:</strong> {{ course.get_category_display }}</li>
+    <li><strong>Regular Price:</strong> ${{ course.price }} {{ course.currency }}</li>
+    <li><strong>Current Enrollments:</strong> {{ course.user_progress.count }}</li>
+</ul>
+
+<div class="alert">
+    <p><strong>Recommended Actions:</strong></p>
+    <ul>
+        <li>Send a personalized welcome message</li>
+        <li>Monitor student progress closely</li>
+        <li>Ensure premium support is available</li>
+        <li>Consider follow-up for additional courses</li>
+    </ul>
+</div>
+
+<a href="{{ enrollment_url }}" class="button">View Enrollment Details</a>
+
+<p>This high-value enrollment contributes significantly to our revenue goals. Please ensure excellent service delivery.</p>
+
+<p>Best regards,<br>NCLEX Virtual School System</p>
+{% endblock %}

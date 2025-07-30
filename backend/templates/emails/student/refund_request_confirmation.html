@@ -1,0 +1,11 @@
+{% extends "emails/base.html" %}
+{% block title %}Refund Request Received{% endblock %}
+{% block header %}Refund Request Confirmation{% endblock %}
+
+{% block content %}
+  <h2>We've received your refund request</h2>
+  <p>Hi {{ user.full_name }},</p>
+  <p>Thank you for submitting your refund request for the course <strong>{{ course.title }}</strong>.</p>
+  <p><strong>Amount:</strong> {{ refund.amount }} {{ payment.currency }}</p>
+  <p>Our team will review your request and get back to you shortly.</p>
+{% endblock %}

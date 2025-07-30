@@ -1,0 +1,62 @@
+{% extends 'emails/base.html' %}
+
+{% block title %}Account Suspended - NCLEX Virtual School{% endblock %}
+
+{% block header %}Account Suspended{% endblock %}
+
+{% block content %}
+<h2>Your Instructor Account Has Been Suspended</h2>
+
+<p>Dear {{ instructor_name }},</p>
+
+<div class="alert alert-danger">
+    <strong>Account Suspended:</strong> Your instructor account has been suspended due to a violation of our platform policies. This action requires immediate attention.
+</div>
+
+{% if reason %}
+<p><strong>Reason for Suspension:</strong> {{ reason }}</p>
+{% endif %}
+
+<h3>What This Means:</h3>
+<ul>
+    <li>Your account access has been temporarily suspended</li>
+    <li>All your courses have been suspended and are unavailable to students</li>
+    <li>You cannot access your instructor dashboard</li>
+    <li>You cannot create, edit, or manage any courses</li>
+    <li>Student enrollments in your courses are temporarily paused</li>
+</ul>
+
+<h3>Account Restoration Process:</h3>
+<ol>
+    <li><strong>Review:</strong> Our moderation team will review your account and course content</li>
+    <li><strong>Individual Course Assessment:</strong> Each of your courses will be evaluated separately</li>
+    <li><strong>Communication:</strong> You will receive updates on the status of your account and courses</li>
+    <li><strong>Resolution:</strong> Approved courses may be restored based on compliance with our policies</li>
+</ol>
+
+<div class="alert alert-danger">
+    <p><strong>Immediate Action Required:</strong></p>
+    <ul>
+        <li>Contact our support team to discuss your account suspension</li>
+        <li>Provide any necessary documentation or explanations</li>
+        <li>Cooperate with the review process to expedite resolution</li>
+    </ul>
+</div>
+
+<h3>Appeal Process:</h3>
+<p>If you believe this suspension was made in error, you can appeal this decision by:</p>
+<ol>
+    <li>Sending a detailed explanation to {{ support_email }}</li>
+    <li>Including any relevant evidence or documentation</li>
+    <li>Clearly stating why you believe the suspension should be reversed</li>
+</ol>
+
+<p>Our support team will review your appeal within 3-5 business days and respond with next steps.</p>
+
+<p><strong>Support Contact:</strong> {{ support_email }}</p>
+
+<p>We take platform integrity seriously and appreciate your cooperation in resolving this matter.</p>
+
+<p>Sincerely,<br>
+<strong>The {{ platform_name }} Moderation Team</strong></p>
+{% endblock %}

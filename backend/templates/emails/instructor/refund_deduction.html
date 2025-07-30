@@ -1,0 +1,55 @@
+<!-- emails/instructor/refund_deduction.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Refund Processed - Payout Adjustment{% endblock %}
+
+{% block content %}
+<h2>⚠️ Refund Processed - Payout Adjustment Notice</h2>
+
+<p>Hello {{ instructor.full_name }},</p>
+
+<p>We're writing to inform you that a refund has been processed for one of your courses, which will affect your next payout.</p>
+
+<div class="alert alert-warning">
+    <h3>Refund Details:</h3>
+    <ul>
+        <li><strong>Course:</strong> {{ course.title }}</li>
+        <li><strong>Refund Amount:</strong> ₦{{ refund_amount|floatformat:2 }}</li>
+        <li><strong>Your Share Deduction:</strong> ₦{{ impact_amount|floatformat:2 }}</li>
+        <li><strong>Refund Date:</strong> {{ refund.completed_at|date:"F d, Y" }}</li>
+        <li><strong>Next Payout Date:</strong> {{ next_payout_date|date:"F d, Y" }}</li>
+    </ul>
+</div>
+
+<div class="alert alert-info">
+    <h3>What This Means:</h3>
+    <ul>
+        <li>The refund amount will be deducted from your next monthly payout</li>
+        <li>This is a standard process to maintain accurate revenue sharing</li>
+        <li>Your course remains active and available for new enrollments</li>
+        <li>This doesn't affect your instructor status or course rankings</li>
+    </ul>
+</div>
+
+<h3>📋 Refund Policy Reminder:</h3>
+<p>Students can request refunds within 30 days of enrollment if they haven't completed more than 20% of the course. This policy helps maintain student satisfaction while protecting instructor earnings.</p>
+
+<h3>🚀 Keep Growing:</h3>
+<p>Don't let this discourage you! Here are ways to reduce refund requests:</p>
+<ul>
+    <li>Provide detailed course descriptions and previews</li>
+    <li>Set clear expectations about course difficulty and prerequisites</li>
+    <li>Respond quickly to student questions and concerns</li>
+    <li>Regularly update course content to keep it valuable</li>
+    <li>Engage with students through announcements and discussions</li>
+</ul>
+
+<div class="button-group">
+    <a href="{{ earnings_url }}" class="button">View Earnings Details</a>
+    <a href="{{ dashboard_url }}" class="button">Go to Dashboard</a>
+</div>
+
+<p>If you have any questions about this refund or our policies, please don't hesitate to contact our support team.</p>
+
+<p>Best regards,<br>The NCLEX Virtual School Team</p>
+{% endblock %}

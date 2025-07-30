@@ -1,0 +1,57 @@
+
+<!-- emails/instructor/appeal_confirmation.html -->
+{% extends 'emails/base.html' %}
+
+{% block title %}Appeal Submitted - NCLEX Virtual School{% endblock %}
+
+{% block header %}Appeal Submitted{% endblock %}
+
+{% block content %}
+<h2>Your Course Appeal Has Been Submitted</h2>
+
+<p>Dear {{ instructor_name }},</p>
+
+<div class="alert alert-success">
+    <strong>Appeal Submitted Successfully!</strong> We have received your appeal for the suspended course and our moderation team will review it promptly.
+</div>
+
+<h3>Appeal Details:</h3>
+<ul>
+    <li><strong>Course:</strong> {{ course_title }}</li>
+    <li><strong>Appeal ID:</strong> {{ appeal_id }}</li>
+    <li><strong>Submitted:</strong> {{ submitted_at|date:"F d, Y \a\t g:i A" }}</li>
+</ul>
+
+<h3>Your Appeal Reason:</h3>
+<div style="background-color: #f8f9fa; padding: 15px; border-radius: 6px; margin: 15px 0;">
+    <p style="margin: 0; font-style: italic;">"{{ appeal_reason }}"</p>
+</div>
+
+<h3>What Happens Next:</h3>
+<ol>
+    <li><strong>Review Process:</strong> Our moderation team will carefully review your appeal and the course content</li>
+    <li><strong>Decision Timeline:</strong> You can expect a decision within 3-5 business days</li>
+    <li><strong>Notification:</strong> You'll receive an email notification with the decision and any feedback</li>
+    <li><strong>Course Restoration:</strong> If approved, your course will be automatically reactivated</li>
+</ol>
+
+<div class="alert">
+    <p><strong>Important Notes:</strong></p>
+    <ul>
+        <li>You cannot submit another appeal for this course while this one is pending</li>
+        <li>Our decision will be based on platform policies and content guidelines</li>
+        <li>If rejected, you'll receive detailed feedback on what needs to be addressed</li>
+    </ul>
+</div>
+
+<p style="text-align: center; margin: 30px 0;">
+    <a href="{{ appeals_url }}" class="button">View My Appeals</a>
+</p>
+
+<p>You can track the status of this and other appeals in your instructor dashboard. If you have any questions about the appeal process, please contact us at {{ support_email }}.</p>
+
+<p>Thank you for your patience as we review your appeal.</p>
+
+<p>Best regards,<br>
+<strong>The {{ platform_name }} Moderation Team</strong></p>
+{% endblock %}

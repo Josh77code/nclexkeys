@@ -1,0 +1,41 @@
+<!-- emails/admin/video_upload_success.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Video Upload Successful - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>✅ Video Upload Successful</h2>
+
+<p>Hello {{ admin_user.full_name }},</p>
+
+<p>The video upload for your course <strong>"{{ course.title }}"</strong> has been completed successfully!</p>
+
+<div class="alert alert-success">
+  <h3>Upload Details:</h3>
+  <ul>
+    <li><strong>Course:</strong> {{ course.title }}</li>
+    <li><strong>Video URL:</strong> <a href="{{ video_info.url }}">View Video</a></li>
+    <li><strong>File Size:</strong> {{ video_info.size|filesizeformat }}</li>
+    <li><strong>Duration:</strong> {{ video_info.duration }} seconds</li>
+    <li><strong>Format:</strong> {{ video_info.format|upper }}</li>
+    <li><strong>Upload Time:</strong> {{ course.updated_at|date:"F d, Y \\a\\t H:i" }}</li>
+  </ul>
+</div>
+
+<h4>What’s Next?</h4>
+<ul>
+  <li>Review the uploaded video for clarity and completeness</li>
+  <li>Edit the course to update descriptions, resources, or quizzes if needed</li>
+  <li>Publish the course or video lesson once reviewed</li>
+</ul>
+
+<h4>Helpful Links:</h4>
+<ul>
+  <li><a href="{{ course_url }}">Go to Course Admin Panel</a></li>
+  <li><a href="mailto:support@nclexvirtualschool.com">Contact Support</a></li>
+</ul>
+
+<p>Thank you for your contribution to NCLEX Virtual School.</p>
+
+<p>Best regards,<br>NCLEX Virtual School System</p>
+{% endblock %}

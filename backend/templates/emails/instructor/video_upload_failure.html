@@ -1,0 +1,43 @@
+<!-- emails/admin/video_upload_failure.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Video Upload Failed - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>❌ Video Upload Failed</h2>
+
+<p>Hello {{ admin_user.full_name }},</p>
+
+<p>Unfortunately, the video upload for the course <strong>"{{ course_title }}"</strong> has failed.</p>
+
+<div class="alert alert-danger">
+    <h3>Error Details:</h3>
+    <p><strong>Error Message:</strong> {{ error_message }}</p>
+    <p><strong>Failed At:</strong> {{ "now"|date:"F d, Y \a\t H:i" }}</p>
+</div>
+
+<h4>Possible Solutions:</h4>
+<ul>
+    <li>Check if the video file is corrupted</li>
+    <li>Ensure the file size is under 500MB</li>
+    <li>Verify the file format (MP4, AVI, MOV, WMV, FLV)</li>
+    <li>Check your internet connection</li>
+    <li>Try uploading again</li>
+</ul>
+
+<h4>Alternative Options:</h4>
+<ul>
+    <li>Use a video URL from YouTube, Vimeo, or other platforms</li>
+    <li>Compress the video file if it's too large</li>
+    <li>Contact technical support for assistance</li>
+</ul>
+
+<div class="alert">
+    <p><strong>Need Help?</strong></p>
+    <p>If you continue to experience issues, please contact our support team at <a href="mailto:{{ support_email }}">{{ support_email }}</a> with the error details above.</p>
+</div>
+
+<p>We apologize for the inconvenience. Please try uploading again or contact support if the problem persists.</p>
+
+<p>Best regards,<br>NCLEX Virtual School System</p>
+{% endblock %}

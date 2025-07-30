@@ -1,0 +1,29 @@
+{% extends 'emails/base.html' %}
+
+{% block title %}Your Earnings Payout - NCLEX Virtual School{% endblock %}
+
+{% block header %}Your Earnings Payout{% endblock %}
+
+{% block content %}
+<h2>Your Payout Has Been Processed</h2>
+<p>Dear {{ instructor.full_name }},</p>
+<p>We’re pleased to inform you that your earnings payout of <strong>${{ payout_amount }}</strong> for the period <strong>{{ period }}</strong> has been successfully processed.</p>
+
+<h3>Payout Details</h3>
+<ul>
+    <li><strong>Amount:</strong> ${{ payout_amount }}</li>
+    <li><strong>Period:</strong> {{ period }}</li>
+    <li><strong>Processed Date:</strong> {% now "F d, Y" %}</li>
+</ul>
+
+<div class="alert alert-success">
+    <strong>Success:</strong>
+    <p>Your payout has been transferred to your designated account. Please allow 3-5 business days for the funds to reflect, depending on your payment provider.</p>
+</div>
+
+<p>
+    <a href="{{ dashboard_url }}" class="button">View Your Dashboard</a>
+</p>
+
+<p>Thank you for your valuable contributions to NCLEX Virtual School. If you have any questions about your payout or account, please contact our support team.</p>
+{% endblock %}

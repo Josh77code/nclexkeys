@@ -1,0 +1,46 @@
+<!-- emails/user/exam_completed.html -->
+{% extends "emails/base.html" %}
+
+{% block header %}Exam {% if passed %}Passed{% else %}Completed{% endif %} - NCLEX Virtual School{% endblock %}
+
+{% block content %}
+<h2>{% if passed %}🎉 Exam Passed!{% else %}📝 Exam Completed{% endif %}</h2>
+
+<p>Hello {{ user.full_name }},</p>
+
+<p>You have completed the exam <strong>"{{ exam.title }}"</strong> for the course "{{ course.title }}".</p>
+
+<div class="alert {% if passed %}alert-success{% else %}alert-info{% endif %}">
+    <h3>Exam Results:</h3>
+    <ul>
+        <li><strong>Exam:</strong> {{ exam.title }}</li>
+        <li><strong>Course:</strong> {{ course.title }}</li>
+        <li><strong>Score:</strong> {{ score }}%</li>
+        <li><strong>Status:</strong> {% if passed %}<span style="color: green;">PASSED ✅</span>{% else %}<span style="color: orange;">COMPLETED</span>{% endif %}</li>
+        <li><strong>Completed At:</strong> {{ completed_at|date:"F d, Y \a\t H:i" }}</li>
+        <li><strong>Time Taken:</strong> {{ time_taken }} minutes</li>
+        <li><strong>Attempt Number:</strong> {{ attempt.attempt_number }}</li>
+    </ul>
+</div>
+
+{% if passed %}
+<div class="alert alert-success">
+    <h4>🏆 Congratulations!</h4>
+    <p>You have successfully passed this exam. Great job on your achievement!</p>
+</div>
+{% else %}
+<div class="alert">
+    <h4>Keep Trying!</h4>
+    <p>Don't give up! Review the course material and try again. You can do this!</p>
+</div>
+{% endif %}
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ results_url }}" class="button" style="margin-right: 10px;">View Detailed Results</a>
+    <a href="{{ course_url }}" class="button button-secondary">Back to Course</a>
+</div>
+
+<p>{% if passed %}Keep up the excellent work!{% else %}Keep studying and you'll succeed next time!{% endif %}</p>
+
+<p>Best regards,<br>The NCLEX Virtual School Team</p>
+{% endblock %}
